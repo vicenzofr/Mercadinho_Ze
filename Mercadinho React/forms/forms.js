@@ -1,10 +1,17 @@
-function Forms({ onClose, onCreateAccount = () => {} }){
+function Forms({ onClose, onCreateAccount, onforgotPassword = () => {} }){
     return(
         <div className="w-100 h-120 bg-[#F9FAFB] mt-45 rounded-lg border-1 border-[#898989]">
-            <h1 
-                className="text-3xl font-bold text-center text-[#4EB352] mt-7">
-                    Sign In
-            </h1>
+            <div className=" relative flex justify-center items-center mt-7">
+                <button
+                    onClick={onClose}
+                    className="absolute left-10 w-6 h-6 bg-cover bg-[url('./assets/icons/arrow.png')] cursor-pointer ">
+                </button>
+                <h1 
+                    className="text-3xl font-bold  text-[#4EB352] ">
+                        Sign In
+                </h1>
+            </div>
+           
 
             <div 
                 className="flex flex-col mt-12 justify-center items-center" id="divEmail">
@@ -50,19 +57,15 @@ function Forms({ onClose, onCreateAccount = () => {} }){
                             Create account
                     </button>
 
-                    <a href="" className="text-blue-600 hover:underline text-[16px] ml-8">
-                        Forgot password ?
-                    </a>
+                     <button
+                        type="button"
+                        onClick={onforgotPassword}
+                        className="text-blue-600 hover:underline text-[16px] cursor-pointer ml-8">
+                             Forgot password ?
+                    </button>
             </div>
 
-            <div
-                className="text-center">
-                <button
-                    onClick={onClose}
-                    className="h-10 w-10 hover:underline text-blue-600 cursor-pointer">
-                        Back
-                </button>
-            </div>
+           
         </div>
     )
 }

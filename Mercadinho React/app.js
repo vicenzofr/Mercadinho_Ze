@@ -1,10 +1,23 @@
 function App() {
-  const [tela, setTela] = React.useState("site"); // pode ser "site", "login", "signup"
+  const [tela, setTela] = React.useState("site");
 
   return (
     <main className="flex flex-col items-center">
-      {tela === "login" && <window.Forms onClose={() => setTela("site")} onCreateAccount={() => setTela("signup")} />}
-      {tela === "signup" && <window.CreateAccount onClose={() => setTela("site")} />}
+      {tela === "login" && (
+        <window.Forms
+          onClose={() => setTela("site")}
+          onCreateAccount={() => setTela("signup")}
+          onforgotPassword={() => setTela("forgot")}
+        />
+      )}
+
+      {tela === "signup" && (
+        <window.CreateAccount onClose={() => setTela("login")} />
+      )}
+
+       {tela === "forgot" && (
+        <window.forgotPassword onClose={() => setTela("login")} />
+      )}
       
       {tela === "site" && (
         <>
@@ -21,4 +34,4 @@ function App() {
   );
 }
 
-ReactDOM.createRoot(document.getElementById('mercado')).render(<App />);
+ReactDOM.createRoot(document.getElementById("mercado")).render(<App />);

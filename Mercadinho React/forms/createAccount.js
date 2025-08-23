@@ -1,10 +1,16 @@
 function CreateAccount({onClose}){
    return(
        <div  className="w-100 h-120 bg-[#F9FAFB] mt-45 rounded-lg border-1 border-[#898989]">
-            <h1 
-                className="text-3xl font-bold text-center text-[#4EB352] mt-7">
-                    Create Account
-            </h1>
+            <div className=" relative flex justify-center items-center mt-7">
+                <button
+                    onClick={onClose}
+                    className="absolute left-10 w-6 h-6 bg-cover bg-[url('./assets/icons/arrow.png')] cursor-pointer ">
+                </button>
+                <h1 
+                    className="text-3xl font-bold  text-[#4EB352] ">
+                        Create Account
+                </h1>
+            </div>
 
             <div 
                 className="flex flex-col mt-12 justify-center items-center" id="createEmail">
@@ -39,16 +45,7 @@ function CreateAccount({onClose}){
                         className="w-50 h-10 bg-[#4EB352]  rounded-lg cursor-pointer font-bold text-white">
                             Submit
                     </button>
-            </div>
-
-            <div
-                className="text-center mt-5">
-                <button
-                    onClick={onClose}
-                    className="h-10 w-10 hover:underline text-blue-600 cursor-pointer">
-                        Back
-                </button>
-            </div>
+            </div>     
        </div>   
     )
 }

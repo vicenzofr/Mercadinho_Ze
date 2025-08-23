@@ -16,8 +16,8 @@ function Carrinho() {
 
   const remove = (nome) => {
     const atual = clear(JSON.parse(localStorage.getItem("carrinho") || "[]"));
-
     const removeOne = atual.findIndex(item => item.nome === nome);
+    
     if (removeOne !== -1) {
       if (atual[removeOne].qtd > 1) {
         atual[removeOne].qtd -= 1;
