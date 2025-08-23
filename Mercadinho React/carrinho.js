@@ -1,32 +1,38 @@
 const { useEffect, useState } = React;
 
 function Carrinho() {
-     const [isImageOpen, setImageOpen] = useState(false);
-     const openImage = () => {
-        setImageOpen(true);
-    };
+  const [isImageOpen, setImageOpen] = useState(false);
+  const [carrinho, setCarrinho] = useState([]); 
+  const [valorTotal, setValorTotal] = useState(0);
 
-    const closeImage = () => {
-        setImageOpen(false);
-    };
- 
+  const clear = (dados) =>
+    (dados || []).filter(it => it && typeof it.valor === "number" && typeof it.qtd === "number");
 
-    const [carrinho, setCarrinho] = useState([]); 
-    const [valorTotal, setValorTotal] = useState(0);
+  useEffect(() => {
+    const dados = clear(JSON.parse(localStorage.getItem("carrinho") || "[]")); 
+    setCarrinho(dados);
+    setValorTotal(dados.reduce((acc, item) => acc + item.valor * item.qtd, 0));
+  }, []);
 
-    useEffect(() => {
-        const dados = JSON.parse(localStorage.getItem("carrinho") || "[]"); 
-        setCarrinho(dados);
-        setValorTotal(dados.reduce((acc, item) => acc + item.valor * item.qtd, 0));
-    }, []);
+  const remove = (nome) => {
+    const atual = clear(JSON.parse(localStorage.getItem("carrinho") || "[]"));
 
-    const remove = (nome) => {
-        const atualizado = carrinho.filter((item) => item.nome !== nome);
-        setCarrinho(atualizado);
-        setValorTotal(dados.reduce((acc, item) => acc + item.valor * item.qtd, 0));
-        localStorage.setItem("carrinho", JSON.stringify(atualizado));
-        window.dispatchEvent(new Event("carrinho:updated"));
-  }
+    const removeOne = atual.findIndex(item => item.nome === nome);
+    if (removeOne !== -1) {
+      if (atual[removeOne].qtd > 1) {
+        atual[removeOne].qtd -= 1;
+      } else {
+        atual.splice(removeOne, 1); // splice é utilizado para modificar que permite remocao, adicao ou subtracao de elementos 
+      }
+    }
+
+    localStorage.setItem("carrinho", JSON.stringify(atual));
+
+    setCarrinho(atual);
+    setValorTotal(atual.reduce((acc, it) => acc + it.valor * it.qtd, 0));
+
+    window.dispatchEvent(new Event("carrinho:updated"));
+  };
 
   return (
     <aside className="w-80 bg-[#F9FAFB] rounded-lg shadow p-4 sticky top-6 mt-25">
@@ -41,8 +47,8 @@ function Carrinho() {
               <button
                 onClick={() => remove(item.nome)}
                 className="w-5 h-5 bg-cover bg-[url('./assets/icons/close.png')] rounded-full cursor-pointer "
-                aria-label="Botão com imagem">
-                </button>
+                aria-label={`Remover ${item.nome}`}>
+              </button>
             </div>
           ))
         ) : (
@@ -57,18 +63,21 @@ function Carrinho() {
         <h2 className="text-[20px]">R${valorTotal.toFixed(2)}</h2>
       </div>
 
-      <button className="h-15 w-70 bg-[#4EB352] justify-center items-center rounded-xl mx-1 font-bold text-white text-[20px] mt-5 cursor-pointer" onClick={openImage}>
+      <button
+        className="h-15 w-70 bg-[#4EB352] justify-center items-center rounded-xl mx-1 font-bold text-white text-[20px] mt-5 cursor-pointer"
+        onClick={() => setImageOpen(true)}
+      >
         Finalizar compra
       </button>
-        {isImageOpen && (
+
+      {isImageOpen && (
         <div className="image-modal">
           <div className="image-modal-content">
-            <span className="close-button" onClick={closeImage}>&times;</span>
+            <span className="close-button" onClick={() => setImageOpen(false)}>&times;</span>
             <img src="./assets/QRcode.jpg" alt="Imagem expandida" />
           </div>
         </div>
       )}
-     
     </aside>
   );
 }
