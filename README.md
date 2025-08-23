@@ -1,6 +1,6 @@
 # Mercadinho do Zé
 
-<img src="imagem_2025-08-22_002305262.png" width="800" height="700">
+<img src="imagem_2025-08-23_012754687.png" width="800" height="700">
 
 Um mini projeto de e-commerce desenvolvido com React + TailwindCSS, simulando um carrinho de compras simples.
 
