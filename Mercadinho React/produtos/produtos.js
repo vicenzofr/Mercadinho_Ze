@@ -10,7 +10,8 @@ function Produtos({ imagem, nome, valor }) {
     }
 
     localStorage.setItem('carrinho', JSON.stringify(carrinho));
-    window.location.reload();
+     window.dispatchEvent(new Event("carrinho:updated"));
+     // dispatchEvent faz com que o js dipare um evente em um obj para que ele aja de uma forma natural
   };
 
   return (
