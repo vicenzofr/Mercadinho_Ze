@@ -1,4 +1,7 @@
-# Mercadinho do Zé
+<h1>
+  <img src="Mercadinho React/assets/icons/logoSemFundo.png" width="60" height="60" align="center">
+  Mercadinho do Zé
+</h1>
 
 <img src="imagem_2025-08-23_012754687.png" width="800" height="700">
 
