@@ -12,7 +12,6 @@ function Forms({ onClose, onCreateAccount, onforgotPassword = () => {} }){
                 </h1>
             </div>
            
-
             <div 
                 className="flex flex-col mt-12 justify-center items-center" id="divEmail">
                 <label className="flex flex-col font-bold text-[15px] text-black">
@@ -65,7 +64,6 @@ function Forms({ onClose, onCreateAccount, onforgotPassword = () => {} }){
                     </button>
             </div>
 
-           
         </div>
     )
 }

@@ -23,11 +23,22 @@ function AdicionarProdutos(){
 
       <div className="mt-6 justify ">
         <label htmlFor="nameProduct">           
-        <input id="nameProduct" type="text" className="cursor-pointer h-10 w-70 flex items-center justify-center border-1 border-[#4EB352] rounded-xl text-black   pl-2 text-center  focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none" placeholder="Nome do produto"></input>
+            <input 
+                id="nameProduct" 
+                type="text" 
+                className="cursor-pointer h-10 w-70 flex items-center justify-center border-1 border-[#4EB352] rounded-xl text-black pl-2 text-center  focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none" 
+                placeholder="Nome do produto">
+            </input>
       </label>
 
       <label htmlFor="valueProduct">
-        <input id="valueProduct" type="number" className="cursor-pointer  h-10 w-70 flex items-center justify-center border-1 border-[#4EB352] rounded-xl text-black text-center mt-3 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" placeholder="Valor do produto"></input>
+        <input 
+            id="valueProduct"
+            type="number"
+            className="cursor-pointer  h-10 w-70 flex items-center justify-center border-1 border-[#4EB352] rounded-xl text-black text-center mt-3 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" 
+            placeholder="Valor do produto">
+
+        </input>
       </label>
       
       <label
@@ -38,12 +49,11 @@ function AdicionarProdutos(){
       <input id="file-upload" type="file" className="hidden " onChange={handleFileChange}/>
       </div>
 
-      
-
       <p className="border-b-2 border-gray-300 mt-7"></p>
 
-      <button className="cursor-pointer h-15 w-70 text-[20px] mt-4 flex items-center justify-center bg-[#4EB352] rounded-xl text-white font-bold hover:bg-green-700">
-        Adicionar
+      <button 
+        className="cursor-pointer h-15 w-70 text-[20px] mt-4 flex items-center justify-center bg-[#4EB352] rounded-xl text-white font-bold hover:bg-green-700">
+            Adicionar
       </button>
     </div>
   )
