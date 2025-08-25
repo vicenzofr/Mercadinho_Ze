@@ -30,7 +30,11 @@ function App() {
           </div>
         </>
       )}
+
+      {/* <window.Footer /> */}
     </main>
+
+    
   );
 }
 
