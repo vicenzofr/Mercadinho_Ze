@@ -1,4 +1,4 @@
-function AdicionarProdutos(){
+function AdicionarProdutos({listaProdutos}){
   const [preview, setPreview] = React.useState(null);
 
   const handleFileChange = (event) => {
@@ -8,6 +8,10 @@ function AdicionarProdutos(){
       setPreview(imageUrl);
     }
   };
+
+  const addProductList = (event) => {
+    addProductList.addEventListener
+  }
 
   return(
     <div className="w-80 h-135 bg-[#F9FAFB] rounded-lg shadow p-4 sticky top-6 mt-25">
@@ -52,7 +56,7 @@ function AdicionarProdutos(){
       <p className="border-b-2 border-gray-300 mt-7"></p>
 
       <button 
-        className="cursor-pointer h-15 w-70 text-[20px] mt-4 flex items-center justify-center bg-[#4EB352] rounded-xl text-white font-bold hover:bg-green-700">
+        className="cursor-pointer h-15 w-70 text-[20px] mt-4 flex items-center justify-center bg-[#4EB352] rounded-xl text-white font-bold hover:bg-green-700" onClick={addProductList}>
             Adicionar
       </button>
     </div>
