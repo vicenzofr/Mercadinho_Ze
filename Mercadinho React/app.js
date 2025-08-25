@@ -25,13 +25,18 @@ function App() {
           <div className="mt-6 flex gap-8 items-start">
             <div className="flex-1">
               <window.ProdutosDisponiveis />
+              
             </div>
-            <window.Carrinho />
+            
+            <div className="flex flex-col gap-4">
+              <window.Carrinho />
+              <window.AdicionarProdutos />
+            </div>
           </div>
         </>
       )}
 
-      {/* <window.Footer /> */}
+      
     </main>
 
     

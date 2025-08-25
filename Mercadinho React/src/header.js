@@ -5,7 +5,7 @@ function Header({ onLoginClick }) {
       <h1 className="text-[27px] font-bold text-[#4EB352]">MERCADINHO DO ZÉ</h1>
       <button 
         onClick={onLoginClick}
-        className="w-40 h-12 bg-[#4EB352] rounded-lg cursor-pointer ml-auto mr-4 flex justify-center items-center gap-10 font-bold">
+        className="w-40 h-12 bg-[#4EB352] hover:bg-green-700 rounded-lg cursor-pointer ml-auto mr-4 flex justify-center items-center gap-10 font-bold">
         Login
       </button>
     </header>

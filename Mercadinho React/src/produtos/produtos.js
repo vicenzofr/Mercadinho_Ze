@@ -20,7 +20,7 @@ function Produtos({ imagem, nome, valor }) {
       <h2 className="text-2xl font-bold">{nome}</h2>
       <h1 className="text-[20px]">R${valor}</h1>
       <button
-        className="bg-[#4EB352] cursor-pointer h-10 w-30 rounded-lg text-white font-bold"
+        className="bg-[#4EB352] hover:bg-green-700 cursor-pointer h-10 w-30 rounded-lg text-white font-bold"
         onClick={() => armazenar({nome, valor, qtd: 0})}>
         Adicionar
       </button>

@@ -71,7 +71,7 @@ function Carrinho() {
       </div>
 
       <button
-        className="h-15 w-70 bg-[#4EB352] justify-center items-center rounded-xl mx-1 font-bold text-white text-[20px] mt-5 cursor-pointer"
+        className="h-15 w-70 bg-[#4EB352] hover:bg-green-700 justify-center items-center rounded-xl mx-1 font-bold text-white text-[20px] mt-5 cursor-pointer"
         onClick={() => setImageOpen(true)}
       >
         Finalizar compra
