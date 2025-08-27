@@ -16,12 +16,12 @@ function Produtos({ imagem, nome, valor, showRemove   }) {
   
   return (
     <div className="relative bg-white w-70 h-80 rounded-lg flex flex-col items-center justify-center gap-2 text-center mt-20 border-1">
-         <button
-          className="absolute top-2 left-2 z-10 w-4 h-4 
-                     bg-[url('./assets/icons/close.png')] 
-                     bg-no-repeat bg-center bg-contain cursor-pointer"
+      {showRemove && (  
+        <button
+          className="absolute top-2 left-2 z-10 w-4 h-4 bg-[url('./assets/icons/close.png')] bg-no-repeat bg-center bg-contain cursor-pointer"
           aria-label="Botão remover"
         />
+      )}
 
       <img src={imagem} alt={nome} className="w-25 h-25 text-center mt-4" />
       <h2 className="text-2xl font-bold">{nome}</h2>

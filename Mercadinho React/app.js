@@ -38,8 +38,8 @@ function App() {
             className="w-full flex justify-end px-4 relative">
             <window.Menu
             onUserClick={() => setTela("login")}
-            onCartClick={() => { setPainel("cart"); setMenuOpen(false); }}
-            onAddClick={() => { setPainel("add"); setMenuOpen(false); }}
+            onCartClick={() => { setPainel("cart"); setMenuOpen(false); setRemoveMode(false)}}
+            onAddClick={() => { setPainel("add"); setMenuOpen(false); setRemoveMode(false) }}
             onCloseClick={() => { setRemoveMode(v => !v); setMenuOpen(false); }}/>
           </div>
         )}
