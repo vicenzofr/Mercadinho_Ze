@@ -54,6 +54,30 @@ function ProdutosDisponiveis(props) {
       nome: "Café",
       valor: 3
     },
+
+    {
+      imagem: "./assets/food/beer.png",
+      nome: "Cerveja",
+      valor: 4.5
+    },
+
+     {
+      imagem: "./assets/food/coconut-water.png",
+      nome: "Coco",
+      valor: 5
+    },
+
+     {
+      imagem: "./assets/food/chicken.png",
+      nome: "Frango",
+      valor: 15
+    },
+
+     {
+      imagem: "./assets/food/energy-drink.png",
+      nome: "Energetico",
+      valor: 8
+    },
     
   ];
 
