@@ -1,4 +1,5 @@
-function ProdutosDisponiveis() {
+function ProdutosDisponiveis(props) {
+  const {showRemove} = props;
   const listaProdutos = [
     { 
         imagem: "./assets/food/hamburger.png",
@@ -58,14 +59,15 @@ function ProdutosDisponiveis() {
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 p-6">
-        {listaProdutos.map((produto, index) => (
-            <window.Produtos
-                key={index}
-                imagem={produto.imagem}
-                nome={produto.nome}
-                valor={produto.valor}
-            />
-        ))}
+      {listaProdutos.map((produto, index) => (
+        <window.Produtos
+          key={index}
+          imagem={produto.imagem}
+          nome={produto.nome}
+          valor={produto.valor}
+          showRemove={showRemove}
+        />
+      ))}
     </div>
 
   );
