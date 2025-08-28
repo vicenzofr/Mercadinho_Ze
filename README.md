@@ -1,5 +1,5 @@
 <h1>
-  <img src="Mercadinho_ZE/assets/icons/logoSemFundo.png" width="60" height="60" align="center">
+  <img src="Mercadinho_Ze/assets/icons/logoSemFundo.png" width="60" height="60" align="center">
   Mercadinho do Zé
 </h1>
 
