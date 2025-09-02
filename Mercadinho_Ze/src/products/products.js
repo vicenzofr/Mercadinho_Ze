@@ -25,7 +25,7 @@ function Produtos({ imagem, nome, valor, showRemove   }) {
 
       <img src={imagem} alt={nome} className="w-25 h-25 text-center mt-4" />
       <h2 className="text-2xl font-bold">{nome}</h2>
-      <h1 className="text-[20px]">R${valor}</h1>
+      <h1 className="text-[20px]">R${Number(valor).toFixed(2)}</h1>
       <button
         className="bg-[#4EB352] hover:bg-green-700 cursor-pointer h-10 w-30 rounded-lg text-white font-bold mt-2"
         onClick={() => armazenar({nome, valor, qtd: 0})}>
