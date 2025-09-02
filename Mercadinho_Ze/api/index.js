@@ -1,6 +1,7 @@
 const express = require("express");
 const SQLiteLite = require("sqlite");
 const sqlite3 = require("sqlite3").verbose();
+const cors = require("cors") //para fazer a "liberacao" das portas do front http://127.0.0.1:5500 para o back end que é http://localhost:3000
 const app = express();
 const port = 3000;
 
@@ -22,6 +23,11 @@ inicializarBD()
 //   }
 // });
 
+app.use(express.json())
+app.use(cors({
+  origin: "http://127.0.0.1:5500"
+}))
+
 app.use(express.json({ limit: '50mb'})); //declara o tipo de objeto 
 
 app.get("/", (req, res) => {
@@ -29,14 +35,15 @@ app.get("/", (req, res) => {
 });
 
 app.post("/product",async(req, res) => {
-  const body = req.body
-  const nome = body.nome
-  const preco = body.preco
-  const quantidade = body.quantidade
+  // const body = req.body
+  // const nome = body.nome
+  // const preco = body.preco
+  // const quantidade = body.quantidade
   // let status
 
-  const dbResponse = await db.run(`INSERT INTO produtos(nome, preco, quantidade) VALUES(?, ?, ?)`, [nome, preco, quantidade])
-
+  const { nome, valor, quant } = req.body;
+  const dbResponse = await db.run(`INSERT INTO produtos(nome, preco, quantidade) VALUES(?, ?, ?)`, [nome, valor, quant])
+  
   return res.json(dbResponse)
 })
 
@@ -65,10 +72,6 @@ app.delete("/product/:id", async(req, res) =>{
   //400 erro
   //201 criado 
   //200 sucesso
-  
-  
-  
-  // const products = app.get("/products")
   
 })
 

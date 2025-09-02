@@ -12,12 +12,40 @@ function AdicionarProdutos({ listaProdutos }) {
     }
   };
 
-  const addProductList = () => {
-    console.log({
-      "Produto": nome,
-      "Valor": valor,
-      "Quantidade": quant,
-    });
+  const addProductList = async () => {
+    // console.log({
+    //   "Produto": nome,
+    //   "Valor": valor,
+    //   "Quantidade": quant,
+    // });
+
+    try{
+       const response = await fetch("http://localhost:3000/product",{
+        method: "POST",
+        headers:{
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          nome: nome,
+          valor: Number(valor),
+          quant: Number(quant)
+        })
+       })
+
+        if (!response.ok) throw new Error("Erro ao adicionar produto");
+
+        const data = await response.json();
+        console.log("Produto adicionado:", data);
+
+        // Atualiza lista de produtos
+        const productsResponse = await fetch("http://localhost:3000/products");
+        const products = await productsResponse.json();
+        console.log("Produtos no banco:", products);
+    }
+
+    catch (error) {
+      console.error("Erro:", error.message);
+    }
   };
 
   return (
