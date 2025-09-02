@@ -32,6 +32,7 @@ function AdicionarProdutos({listaProdutos}){
                 type="text" 
                 className="cursor-pointer h-10 w-70 flex items-center justify-center border-1 border-[#4EB352] rounded-xl text-black pl-2 text-center  focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none" 
                 placeholder="Nome do produto">
+                {nome}
             </input>
       </label>
 
@@ -41,7 +42,7 @@ function AdicionarProdutos({listaProdutos}){
             type="number"
             className="cursor-pointer  h-10 w-70 flex items-center justify-center border-1 border-[#4EB352] rounded-xl text-black text-center mt-3 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" 
             placeholder="Valor do produto">
-
+              {valor}
         </input>
       </label>
       
