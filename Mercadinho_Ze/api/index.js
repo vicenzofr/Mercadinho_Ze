@@ -4,15 +4,32 @@ const sqlite3 = require("sqlite3").verbose();
 const cors = require("cors") //para fazer a "liberacao" das portas do front http://127.0.0.1:5500 para o back end que é http://localhost:3000
 const app = express();
 const port = 3000;
-
 let db 
 
-async function inicializarBD (){
+async function inicializarBD() {
+  // Cria a pasta 'database' se não existir
+  const fs = require("fs");
+  const path = "./database";
+  if (!fs.existsSync(path)) fs.mkdirSync(path);
+
   db = await SQLiteLite.open({
     filename: "./database/mercadinho.db",
-    driver: sqlite3.Database
-  })
+    driver: sqlite3.Database,
+  });
+
+ // Cria a tabela produtos se não existir
+  await db.run(`
+    CREATE TABLE IF NOT EXISTS produtos (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      nome TEXT NOT NULL,
+      preco REAL NOT NULL,
+      quantidade INTEGER NOT NULL
+    )
+  `);
+  
+  console.log("Banco e tabela inicializados!");
 }
+
 inicializarBD()
 
 // const db = new sqlite3.Database("./database/mercadinho.db", (err) => {
