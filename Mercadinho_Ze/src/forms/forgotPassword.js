@@ -1,6 +1,6 @@
 function forgotPassword({onClose}){
     return(
-        <div className="w-100 h-120 bg-[#F9FAFB] mt-45 rounded-lg border-1 border-[#898989]">
+        <div className="w-100 h-120 bg-[#F9FAFB] mt-46 rounded-lg border-1 border-[#898989]">
              <div className=" relative flex justify-center items-center mt-7">
                 <button
                     onClick={onClose}

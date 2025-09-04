@@ -5,7 +5,7 @@ function App() {
   const [removeMode, setRemoveMode] = React.useState(false);
 
   return (
-    <main className="flex flex-col min-h-screen">
+    <main className="flex flex-col min-h-screen items-center justify-center">
       {tela === "login" && (
         <window.Forms
           onClose={() => setTela("site")}
@@ -15,7 +15,9 @@ function App() {
       )}
 
       {tela === "signup" && (
+        
         <window.CreateAccount onClose={() => setTela("login")} />
+        
       )}
 
        {tela === "forgot" && (
@@ -55,7 +57,8 @@ function App() {
         </div>
       </>
       )}
-      <div className="w-full mt-20">
+
+      <div className="w-full mt-50">
         <window.Footer />
       </div>
     </main>    
