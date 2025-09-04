@@ -1,4 +1,4 @@
-function Produtos({ imagem, nome, valor, showRemove   }) {
+function Produtos({ imagem, nome, valor, onRemove, removivel }) {
   const armazenar = (item) => {
     const carrinho = JSON.parse(localStorage.getItem('carrinho') || '[]');
     const i = carrinho.findIndex((p) => p.nome === nome);
@@ -16,10 +16,11 @@ function Produtos({ imagem, nome, valor, showRemove   }) {
   
   return (
     <div className="relative bg-white w-70 h-80 rounded-lg flex flex-col items-center justify-center gap-2 text-center mt-20 border-1">
-      {showRemove && (  
+       {removivel && (
         <button
           className="absolute top-2 left-2 z-10 w-4 h-4 bg-[url('./assets/icons/close.png')] bg-no-repeat bg-center bg-contain cursor-pointer"
           aria-label="Botão remover"
+          onClick={onRemove}
         />
       )}
 

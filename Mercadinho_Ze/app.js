@@ -46,7 +46,7 @@ function App() {
       
       <div className="flex-1 mt-6 grid grid-cols-[3fr_1fr] gap-12 items-start pb-30">
         <div>
-          <window.ProdutosDisponiveis showRemove={removeMode} />
+          <window.ProdutosDisponiveis removivel={removeMode} />
         </div>
 
         <div className="flex flex-col gap-10 mb-10">
