@@ -64,6 +64,7 @@ app.post("/product",async(req, res) => {
   return res.json(dbResponse)
 })
 
+
 app.get("/products", async(req, res) => {
   const products = await db.all("SELECT * FROM produtos")
   return res.json(products)

@@ -1,99 +1,34 @@
-function ProdutosDisponiveis(props) {
-  const {showRemove} = props;
-  const listaProdutos = [
-    { 
-        imagem: "./assets/food/hamburger.png",
-        nome: "Hambúrguer",
-        valor: 25.00 
-    },
+function ProdutosDisponiveis({ showRemove }) {
+  const [listaProdutos, setListaProdutos] = useState([]);
 
-    {
-      imagem: "./assets/food/taco.png",
-      nome: "Taco",
-      valor: 13
-    },
+  useEffect(() => {
+    const fetchProdutos = async () => {
+      try {
+        const response = await fetch("http://localhost:3000/products");
+        const produtos = await response.json();
+        setListaProdutos(produtos);
+        console.log("Produtos no banco:", produtos);
+      } catch (error) {
+        console.error("Erro ao buscar produtos:", error.message);
+      }
+    };
 
-    {
-      imagem: "./assets/food/donut.png",
-      nome: "Donut",
-      valor: 5
-    },
-
-    {
-      imagem: "./assets/food/pizza.png",
-      nome: "Pizza",
-      valor: 26
-    },
-
-     {
-      imagem: "./assets/food/french-fries.png",
-      nome: "Batata Frita",
-      valor: 13
-    },
-    
-    {
-      imagem: "./assets/food/orange.png",
-      nome: "Laranja",
-      valor: 2
-    },
-
-    {
-      imagem: "./assets/food/juice-box.png",
-      nome: "Suco",
-      valor: 7
-    },
-
-    {
-      imagem: "./assets/food/cola.png",
-      nome: "CocaCola",
-      valor: 4
-    },
-
-    {
-      imagem: "./assets/food/coffee-cup.png",
-      nome: "Café",
-      valor: 3
-    },
-
-    {
-      imagem: "./assets/food/beer.png",
-      nome: "Cerveja",
-      valor: 4.5
-    },
-
-     {
-      imagem: "./assets/food/coconut-water.png",
-      nome: "Coco",
-      valor: 5
-    },
-
-     {
-      imagem: "./assets/food/chicken.png",
-      nome: "Frango",
-      valor: 15
-    },
-
-     {
-      imagem: "./assets/food/energy-drink.png",
-      nome: "Energetico",
-      valor: 8
-    },
-    
-  ];
+    fetchProdutos();
+  }, []);
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 p-6">
-      {listaProdutos.map((produto, index) => (
+      {listaProdutos.map((produto) => (
         <window.Produtos
-          key={index}
-          imagem={produto.imagem}
+          key={produto.id}
+          imagem={url=`./assets/food/${produto.nome}.png`}
           nome={produto.nome}
-          valor={produto.valor}
+          valor={produto.preco}
           showRemove={showRemove}
         />
       ))}
     </div>
-
   );
 }
+
 window.ProdutosDisponiveis = ProdutosDisponiveis;

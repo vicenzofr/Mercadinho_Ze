@@ -5,7 +5,7 @@ function App() {
   const [removeMode, setRemoveMode] = React.useState(false);
 
   return (
-    <main className="flex flex-col items-center">
+    <main className="flex flex-col min-h-screen">
       {tela === "login" && (
         <window.Forms
           onClose={() => setTela("site")}
@@ -44,18 +44,20 @@ function App() {
           </div>
         )}
       
-         <div className="mt-6 flex gap-8 items-start">
-            <div className="flex-1">
-              <window.ProdutosDisponiveis showRemove={removeMode} />
-            </div>
-            <div className="flex flex-col gap-4">
-              {painel === 'cart' ? <window.Carrinho /> : <window.AdicionarProdutos />}
-            </div>
+      <div className="flex-1 mt-6 grid grid-cols-[3fr_1fr] gap-12 items-start pb-30">
+        <div>
+          <window.ProdutosDisponiveis showRemove={removeMode} />
+        </div>
+
+        <div className="flex flex-col gap-10 mb-10">
+          {painel === 'cart' ? <window.Carrinho /> : <window.AdicionarProdutos />}
           </div>
+        </div>
       </>
       )}
-        
-        <window.Footer/>
+      <div className="w-full mt-20">
+        <window.Footer />
+      </div>
     </main>    
   );
 }
