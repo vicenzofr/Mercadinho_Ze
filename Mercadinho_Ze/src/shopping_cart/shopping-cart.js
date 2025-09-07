@@ -8,18 +8,18 @@ function Carrinho() {
   const clear = (dados) =>
     (dados || []).filter(it => it && typeof it.valor === "number" && typeof it.qtd === "number");
 
-  useEffect(() => {
-    const loadCarrinho = () => {
-      const dados = clear(JSON.parse(localStorage.getItem("carrinho") || "[]")); 
-      setCarrinho(dados);
-      setValorTotal(dados.reduce((acc, item) => acc + item.valor * item.qtd, 0));
-    };
+    useEffect(() => {
+      const loadCarrinho = () => {
+        const dados = clear(JSON.parse(localStorage.getItem("carrinho") || "[]")); 
+        setCarrinho(dados);
+        setValorTotal(dados.reduce((acc, item) => acc + item.valor * item.qtd, 0));
+      };
 
-    loadCarrinho();
-    window.addEventListener("carrinho:updated", loadCarrinho);
-    return() => window.removeEventListener("carrinho:updated", loadCarrinho);
-   
-  }, []);
+      loadCarrinho();
+      window.addEventListener("carrinho:updated", loadCarrinho);
+      return() => window.removeEventListener("carrinho:updated", loadCarrinho);
+    
+    }, []);
 
   const remove = (nome) => {
     const atual = clear(JSON.parse(localStorage.getItem("carrinho") || "[]"));

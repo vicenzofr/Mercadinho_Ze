@@ -11,7 +11,6 @@ function forgotPassword({onClose}){
                         Forgot password
                 </h1>
             </div>
-
             <p className="text-center mt-12 max-w-[250px] break-words mx-auto ">
                 we will send you an email to reset to password
             </p>

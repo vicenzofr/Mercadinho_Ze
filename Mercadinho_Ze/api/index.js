@@ -40,10 +40,14 @@ inicializarBD()
 //   }
 // });
 
+// app.use(express.json())
+// app.use(cors({
+//   // origin: "http://127.0.0.1:5500"
+//   origin: "*"
+// }))
+
 app.use(express.json())
-app.use(cors({
-  origin: "http://127.0.0.1:5500"
-}))
+app.use(cors());// aqui eu consigo liberar todas as APIs sem precisar baixar o cors nos pcs 
 
 app.use(express.json({ limit: '50mb'})); //declara o tipo de objeto 
 
