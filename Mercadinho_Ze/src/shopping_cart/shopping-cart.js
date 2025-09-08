@@ -9,17 +9,33 @@ function Carrinho() {
     (dados || []).filter(it => it && typeof it.valor === "number" && typeof it.qtd === "number");
 
     useEffect(() => {
-      const loadCarrinho = () => {
-        const dados = clear(JSON.parse(localStorage.getItem("carrinho") || "[]")); 
-        setCarrinho(dados);
-        setValorTotal(dados.reduce((acc, item) => acc + item.valor * item.qtd, 0));
-      };
+      const loadCarrinho = async () => {
+        const dados = clear(JSON.parse(localStorage.getItem("carrinho") || "[]"));//pegando do local 
 
-      loadCarrinho();
-      window.addEventListener("carrinho:updated", loadCarrinho);
-      return() => window.removeEventListener("carrinho:updated", loadCarrinho);
-    
-    }, []);
+        try {
+          const response = await fetch("http://localhost:3000/products");// pegando do banco de dados
+          const produtosDB = await response.json();
+  
+          //mantem se os produtos realmente existir no banco de dados 
+          const sincronizado = dados.filter(item =>
+            produtosDB.some(prod => prod.nome === item.nome)
+          );
+
+          setCarrinho(sincronizado);
+          setValorTotal(sincronizado.reduce((acc, item) => acc + item.valor * item.qtd, 0));
+
+          localStorage.setItem("carrinho", JSON.stringify(sincronizado));
+        } catch (err) {
+          console.error("Erro ao carregar produtos:", err);
+          setCarrinho(dados);
+          setValorTotal(dados.reduce((acc, item) => acc + item.valor * item.qtd, 0));
+      }
+    };
+
+    loadCarrinho();
+    window.addEventListener("carrinho:updated", loadCarrinho);
+    return () => window.removeEventListener("carrinho:updated", loadCarrinho);
+  }, []);
 
   const remove = (nome) => {
     const atual = clear(JSON.parse(localStorage.getItem("carrinho") || "[]"));
@@ -29,7 +45,7 @@ function Carrinho() {
       if (atual[removeOne].qtd > 1) {
         atual[removeOne].qtd -= 1;
       } else {
-        atual.splice(removeOne, 1); // splice é utilizado para modificar que permite remocao, adicao ou subtracao de elementos 
+        atual.splice(removeOne, 1); 
       }
     }
 
@@ -72,16 +88,63 @@ function Carrinho() {
 
       <button
         className="h-15 w-70 bg-[#4EB352] hover:bg-green-700 justify-center items-center rounded-xl mx-1 font-bold text-white text-[20px] mt-5 cursor-pointer"
-        onClick={() => setImageOpen(true)}
-      >
+        onClick={() => {
+          if(carrinho.length == 0){
+            alert("Seu carrinho esta vazio")
+            return
+          }
+          setImageOpen(true)
+        }}> 
         Finalizar compra
       </button>
 
+      
+
+
       {isImageOpen && (
-        <div className="image-modal">
-          <div className="image-modal-content">
-            <span className="close-button" onClick={() => setImageOpen(false)}>&times;</span>
-            <img src="./assets/QRcode.jpg" alt="Imagem expandida" />
+        <div className="image-modal justify-center items-center flex mt-10">
+          <div className="image-modal-content ">
+           <button 
+              id="creditCard" 
+              className="h-15 w-75 border-1 border-gray-500 rounded-xl mt-3 cursor-pointer flex items-center justify-between px-4 font-bold text-[#4EB352]">
+              <div className="flex items-center">
+                <img 
+                  src="./assets/icons/shopping-cart/credit-card.png" 
+                  className="w-6 h-6 mr-3" 
+                  alt="Cartão de crédito"
+                />
+                <span>Cartão de crédito</span>
+              </div>
+
+              <img 
+                src="./assets/icons/shopping-cart/right-arrow.png" 
+                className="w-5 h-5" 
+                alt="Seta"
+              />
+            </button>
+
+            <button 
+              id="bankSlip" 
+              className="h-15 w-75 border-1 border-gray-500 rounded-xl mt-3 cursor-pointer flex items-center justify-between px-4 font-bold text-[#4EB352]">
+              <div className="flex items-center">
+                <img src="./assets/icons/shopping-cart/receipt.png" className="w-6 h-6 mr-3" alt="Boleto"/>
+                <span>Boleto bancário</span>
+              </div>
+
+              <img src="./assets/icons/shopping-cart/right-arrow.png" className="w-5 h-5" alt="Seta"/>
+            </button>
+
+            <button 
+              id="pix" 
+              className="h-15 w-75 border-1 border-gray-500 rounded-xl mt-3 cursor-pointer flex items-center justify-between px-4 font-bold text-[#4EB352]">
+              <div className="flex items-center">
+                <img src="./assets/icons/shopping-cart/pix.png" className="w-6 h-6 mr-3" alt="PIX"/>
+                <span>Chave PIX</span>
+              </div>
+
+              <img src="./assets/icons/shopping-cart/right-arrow.png" className="w-5 h-5" alt="Seta" />
+            </button>
+
           </div>
         </div>
       )}
