@@ -94,6 +94,7 @@ function Carrinho() {
             return
           }
           setImageOpen(true)
+          
         }}> 
         Finalizar compra
       </button>
@@ -125,7 +126,8 @@ function Carrinho() {
 
             <button 
               id="bankSlip" 
-              className="h-15 w-75 border-1 border-gray-500 rounded-xl mt-3 cursor-pointer flex items-center justify-between px-4 font-bold text-[#4EB352]">
+              className="h-15 w-75 border-1 border-gray-500 rounded-xl mt-3 cursor-pointer flex items-center justify-between px-4 font-bold text-[#4EB352]" onClick={() => gerarPDFCarrinho()}
+>
               <div className="flex items-center">
                 <img src="./assets/icons/shopping-cart/receipt.png" className="w-6 h-6 mr-3" alt="Boleto"/>
                 <span>Boleto bancário</span>

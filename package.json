@@ -1,10 +1,12 @@
 {
-  "scripts": {
-    "dev": "node src/marketplace.html"
-  },
+  "name": "mercadinho",
+  "version": "1.0.0",
+  "type": "module",
+  
   "dependencies": {
     "animate.css": "^4.1.1",
     "mercadopago": "^2.8.0",
+    "pdfkit": "^0.17.2",
     "sqlite": "^5.1.1",
     "sqlite3": "^5.1.7"
   }
