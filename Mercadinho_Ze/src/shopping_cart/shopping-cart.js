@@ -76,8 +76,7 @@ function Carrinho() {
       atual[addOne].qtd += 1
       } else {
         atual.push({ nome, qtd: 1, valor: addValor(nome) });       
-      }
-    
+      }    
 
     localStorage.setItem("carrinho", JSON.stringify(atual));
 
@@ -305,9 +304,7 @@ function Carrinho() {
                   value="Pagar" 
                   className="h-10 w-30 bg-[#4EB352] mt-4 rounded-lg text-white font-bold cursor-pointer" 
                   id="submitCreditCard"/>
-              </div>
-          
-             
+              </div>             
           </forms>
         </div>
         
