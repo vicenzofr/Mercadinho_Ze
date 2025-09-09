@@ -4,6 +4,7 @@ function Carrinho() {
   const [isImageOpen, setImageOpen] = useState(false);
   const [carrinho, setCarrinho] = useState([]); 
   const [valorTotal, setValorTotal] = useState(0);
+  const [cardCredit, setCard] = useState(false);
 
   const clear = (dados) =>
     (dados || []).filter(it => it && typeof it.valor === "number" && typeof it.qtd === "number");
@@ -147,12 +148,102 @@ function Carrinho() {
         Finalizar compra
       </button>
 
+      <div id="formsCard">
+        <div className="w-72 h-45 bg-[#4EB352] rounded-3xl mt-10 justify-center items-center flex relative flex-col">
+          <div className="self-start mt-4 ">
+            <p className="absolute top-4 left-43 font-bold text-white text-[20px]">ZÉBANK</p>
+          </div>
+          
+          <div className="flex gap-40 mt-2">
+            <img src="./assets/icons/creditCard/chip.png" className="w-8 h-8"></img>
+            <img src="./assets/icons/creditCard/nfc.png" className="w-6 h-6"></img>
+          </div>
+
+          <div className="justify-center items-center text-center flex mt-2">
+            <h1 id="numberCard" className="text-white text-[20px] tracking-wide">123 5678 9012 3456</h1>
+          </div>
+
+          <div className="flex justify-center items-center gap-15 text-center mt-2">
+            <h1 id="cardholderName" className="text-white text-[12px] tracking-wide">CARDHOLDER NAME</h1>
+            <h1 id="mmYY" className="text-white text-[12px] tracking-wide ">12/24</h1>
+          </div>
+
+        </div>
+
+        <div className="justify-center items-center flex mt-4">
+          <forms>
+           <div className="mt-3 gap-2">
+              <div className="w-72 h-10 relative bg-white border border-gray-300 rounded-lg flex items-center px-2">
+                <input 
+                  type="number" 
+                  id="numberCard" 
+                  className="w-full h-full text-[12px] placeholder-gray-400 border-none outline-none pr-8"
+                  placeholder="CARD NUMBER"
+                /> 
+                <img
+                  src="./assets/icons/creditCard/contactless.png"
+                  alt="CVV icon"
+                  className="absolute right-2 h-6"
+                />
+              </div>
+
+              <div className="w-72 h-10 relative bg-white border border-gray-300 rounded-lg flex items-center px-2 mt-2">
+                <input 
+                  type="text" 
+                  id="nameCard" 
+                  className="w-full h-full text-[12px] placeholder-gray-400 border-none outline-none pr-8"
+                  placeholder="CARDHOLDER NAME"
+                />   
+              </div>
+            </div>
+
+            <div className="mt-3 flex gap-2">
+              <div className="w-23 h-10 relative bg-white border border-gray-300 rounded-lg flex items-center px-2">
+                <input 
+                  id="MM"
+                  type="number"
+                  className="w-23 h-10  text-[12px] placeholder-gray-400 border-none outline-none pr-8" 
+                  placeholder="MM"
+                />    
+              </div>
+
+              <div className="w-23 h-10 relative bg-white border border-gray-300 rounded-lg flex items-center px-2">
+                <input 
+                  id="YY" 
+                  type="number"
+                  className="w-23 h-10 text-[12px] placeholder-gray-400 border-none outline-none pr-8 " 
+                  placeholder="YY"
+                />
+              </div>
+
+              <div className="w-23 h-10 relative bg-white border border-gray-300 rounded-lg flex items-center px-2">
+                <input
+                  id="CVV"
+                  type="number"
+                  className="w-full h-full text-[12px] placeholder-gray-400 border-none outline-none pr-8"
+                  placeholder="CVV"
+                />
+                <img
+                  src="./assets/icons/creditCard/cvv.png"
+                  alt="CVV icon"
+                  className="absolute right-2 h-6"
+                />
+              </div>
+            </div>
+          </forms>
+        </div>
+        
+      </div>
+
+     
+
       {isImageOpen && (
         <div className="image-modal justify-center items-center flex mt-10">
           <div className="image-modal-content ">
            <button 
               id="creditCard" 
-              className="h-15 w-75 border-1 border-gray-500 rounded-xl mt-3 cursor-pointer flex items-center justify-between px-4 font-bold text-[#4EB352]">
+              className="h-15 w-75 border-1 border-gray-500 rounded-xl mt-3 cursor-pointer flex items-center justify-between px-4 font-bold text-[#4EB352]"
+              onClick={() => {setCard(true)}}>
               <div className="flex items-center">
                 <img 
                   src="./assets/icons/shopping-cart/credit-card.png" 
