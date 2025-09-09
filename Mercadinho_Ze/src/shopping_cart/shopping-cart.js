@@ -4,7 +4,17 @@ function Carrinho() {
   const [isImageOpen, setImageOpen] = useState(false);
   const [carrinho, setCarrinho] = useState([]); 
   const [valorTotal, setValorTotal] = useState(0);
-  const [cardCredit, setCard] = useState(false);
+  const [isCardCredit, setCard] = useState(false);
+
+  const toggleImage = () => {
+    setImageOpen(true);
+    setCard(false); // garante que o outro fique falso
+  };
+
+  const toggleCard = () => {
+    setCard(true);
+    setImageOpen(false); // garante que o outro fique falso
+  };
 
   const clear = (dados) =>
     (dados || []).filter(it => it && typeof it.valor === "number" && typeof it.qtd === "number");
@@ -148,8 +158,61 @@ function Carrinho() {
         Finalizar compra
       </button>
 
-      <div id="formsCard">
-        <div className="w-72 h-45 bg-[#4EB352] rounded-3xl mt-10 justify-center items-center flex relative flex-col">
+      {isImageOpen && (
+        <div className="image-modal justify-center items-center flex mt-10">
+          <div className="image-modal-content ">
+           <button 
+              id="creditCard" 
+              className="h-15 w-75 border-1 border-gray-500 rounded-xl mt-3 cursor-pointer flex items-center justify-between px-4 font-bold text-[#4EB352]"
+              onClick={toggleCard}>
+              <div className="flex items-center">
+                <img 
+                  src="./assets/icons/shopping-cart/credit-card.png" 
+                  className="w-6 h-6 mr-3" 
+                  alt="Cartão de crédito"
+                />
+                <span>Cartão de crédito</span>
+              </div>
+
+              <img 
+                src="./assets/icons/shopping-cart/right-arrow.png" 
+                className="w-5 h-5" 
+                alt="Seta"
+              />
+            </button>
+
+            <button 
+              id="bankSlip" 
+              className="h-15 w-75 border-1 border-gray-500 rounded-xl mt-3 cursor-pointer flex items-center justify-between px-4 font-bold text-[#4EB352]" onClick={() => gerarPDFCarrinho()}>
+
+              <div className="flex items-center">
+                <img src="./assets/icons/shopping-cart/receipt.png" className="w-6 h-6 mr-3" alt="Boleto"/>
+                <span>Boleto bancário</span>
+              </div>
+
+              <img src="./assets/icons/shopping-cart/right-arrow.png" className="w-5 h-5" alt="Seta"/>
+            </button>
+
+            <button 
+              id="pix" 
+              className="h-15 w-75 border-1 border-gray-500 rounded-xl mt-3 cursor-pointer flex items-center justify-between px-4 font-bold text-[#4EB352]">
+              <div className="flex items-center">
+                <img src="./assets/icons/shopping-cart/pix.png" className="w-6 h-6 mr-3" alt="PIX"/>
+                <span>Chave PIX</span>
+              </div>
+
+              <img src="./assets/icons/shopping-cart/right-arrow.png" className="w-5 h-5" alt="Seta" />
+            </button>
+
+          </div>
+        </div>
+      )}
+
+       {isCardCredit &&(<div id="formsCard">
+        <p className="border-b-2 border-gray-300 mt-10"></p>
+        <button className="w-6 h-6 mt-4 bg-[url('./assets/icons/arrow.png')] bg-no-repeat bg-center bg-contain cursor-pointer" onClick={toggleImage}>
+        </button>
+        <div className="w-72 h-45 bg-[#4EB352] rounded-3xl mt-3 justify-center items-center flex relative flex-col">
           <div className="self-start mt-4 ">
             <p className="absolute top-4 left-43 font-bold text-white text-[20px]">ZÉBANK</p>
           </div>
@@ -177,8 +240,9 @@ function Carrinho() {
                 <input 
                   type="number" 
                   id="numberCard" 
-                  className="w-full h-full text-[12px] placeholder-gray-400 border-none outline-none pr-8"
+                  className="w-full h-full text-[12px] placeholder-gray-400 border-none outline-none pr-8 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                   placeholder="CARD NUMBER"
+                  required
                 /> 
                 <img
                   src="./assets/icons/creditCard/contactless.png"
@@ -193,6 +257,7 @@ function Carrinho() {
                   id="nameCard" 
                   className="w-full h-full text-[12px] placeholder-gray-400 border-none outline-none pr-8"
                   placeholder="CARDHOLDER NAME"
+                  required
                 />   
               </div>
             </div>
@@ -202,8 +267,9 @@ function Carrinho() {
                 <input 
                   id="MM"
                   type="number"
-                  className="w-23 h-10  text-[12px] placeholder-gray-400 border-none outline-none pr-8" 
+                  className="w-23 h-10  text-[12px] placeholder-gray-400 border-none outline-none pr-8 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" 
                   placeholder="MM"
+                  required
                 />    
               </div>
 
@@ -211,8 +277,9 @@ function Carrinho() {
                 <input 
                   id="YY" 
                   type="number"
-                  className="w-23 h-10 text-[12px] placeholder-gray-400 border-none outline-none pr-8 " 
+                  className="w-23 h-10 text-[12px] placeholder-gray-400 border-none outline-none pr-8 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" 
                   placeholder="YY"
+                  required
                 />
               </div>
 
@@ -220,72 +287,32 @@ function Carrinho() {
                 <input
                   id="CVV"
                   type="number"
-                  className="w-full h-full text-[12px] placeholder-gray-400 border-none outline-none pr-8"
+                  className="w-full h-full text-[12px] placeholder-gray-400 border-none outline-none pr-8 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                   placeholder="CVV"
+                  required
                 />
                 <img
                   src="./assets/icons/creditCard/cvv.png"
                   alt="CVV icon"
                   className="absolute right-2 h-6"
                 />
+                </div>
               </div>
-            </div>
+
+              <div className="flex justify-end">
+                <input 
+                  type="submit" 
+                  value="Pagar" 
+                  className="h-10 w-30 bg-[#4EB352] mt-4 rounded-lg text-white font-bold cursor-pointer" 
+                  id="submitCreditCard"/>
+              </div>
+          
+             
           </forms>
         </div>
         
-      </div>
+      </div>)}
 
-     
-
-      {isImageOpen && (
-        <div className="image-modal justify-center items-center flex mt-10">
-          <div className="image-modal-content ">
-           <button 
-              id="creditCard" 
-              className="h-15 w-75 border-1 border-gray-500 rounded-xl mt-3 cursor-pointer flex items-center justify-between px-4 font-bold text-[#4EB352]"
-              onClick={() => {setCard(true)}}>
-              <div className="flex items-center">
-                <img 
-                  src="./assets/icons/shopping-cart/credit-card.png" 
-                  className="w-6 h-6 mr-3" 
-                  alt="Cartão de crédito"
-                />
-                <span>Cartão de crédito</span>
-              </div>
-
-              <img 
-                src="./assets/icons/shopping-cart/right-arrow.png" 
-                className="w-5 h-5" 
-                alt="Seta"
-              />
-            </button>
-
-            <button 
-              id="bankSlip" 
-              className="h-15 w-75 border-1 border-gray-500 rounded-xl mt-3 cursor-pointer flex items-center justify-between px-4 font-bold text-[#4EB352]" onClick={() => gerarPDFCarrinho()}
->
-              <div className="flex items-center">
-                <img src="./assets/icons/shopping-cart/receipt.png" className="w-6 h-6 mr-3" alt="Boleto"/>
-                <span>Boleto bancário</span>
-              </div>
-
-              <img src="./assets/icons/shopping-cart/right-arrow.png" className="w-5 h-5" alt="Seta"/>
-            </button>
-
-            <button 
-              id="pix" 
-              className="h-15 w-75 border-1 border-gray-500 rounded-xl mt-3 cursor-pointer flex items-center justify-between px-4 font-bold text-[#4EB352]">
-              <div className="flex items-center">
-                <img src="./assets/icons/shopping-cart/pix.png" className="w-6 h-6 mr-3" alt="PIX"/>
-                <span>Chave PIX</span>
-              </div>
-
-              <img src="./assets/icons/shopping-cart/right-arrow.png" className="w-5 h-5" alt="Seta" />
-            </button>
-
-          </div>
-        </div>
-      )}
     </aside>
   );
 }
