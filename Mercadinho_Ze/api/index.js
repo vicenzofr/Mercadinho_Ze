@@ -85,6 +85,15 @@ app.get("/product/:id", async(req, res)=>{
   return res.json(productId)
 })
 
+app.get("/product/quant/:id", async (req, res) => {
+  const productQuant = await db.get(
+    "SELECT quantidade FROM produtos WHERE id = ?",
+    [req.params.id]
+  );
+  return res.json(productQuant);
+});
+
+
 app.delete("/product/delete/:id", async(req, res) =>{
   const id = req.params.id
   const productId = await db.get("SELECT * FROM produtos WHERE id=?", id)
