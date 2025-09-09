@@ -55,11 +55,11 @@ app.get("/", (req, res) => {
   res.send("API rodando com SQLite!");
 });
 
-fetch('/api/gerar-pdf', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify(carrinho)
-});
+// fetch('/api/gerar-pdf', {
+//   method: 'POST',
+//   headers: { 'Content-Type': 'application/json' },
+//   body: JSON.stringify(carrinho)
+// });
 
 app.post("/product",async(req, res) => {
   // const body = req.body

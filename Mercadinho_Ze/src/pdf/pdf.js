@@ -96,3 +96,5 @@ doc.font('Helvetica-Bold')
    .text(total, startX + colWidth * 2, startY, { width: colWidth, align: 'center' });
 
 doc.end();
+
+console.log("PDF gerado com sucesso")

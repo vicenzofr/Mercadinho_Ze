@@ -57,21 +57,69 @@ function Carrinho() {
     window.dispatchEvent(new Event("carrinho:updated"));
   };
 
+  const adicionar = (nome) =>{
+    const atual = clear(JSON.parse(localStorage.getItem("carrinho") || "[]"));
+    const addOne = atual.findIndex(item => item.nome === nome);
+
+    if (addOne >= 0 ) {
+      atual[addOne].qtd += 1
+      } else {
+        atual.push({ nome, qtd: 1, valor: addValor(nome) });       
+      }
+    
+
+    localStorage.setItem("carrinho", JSON.stringify(atual));
+
+    setCarrinho(atual);
+    setValorTotal(atual.reduce((acc, it) => acc + it.valor * it.qtd, 0));
+
+    window.dispatchEvent(new Event("carrinho:updated"));
+  }
+
   return (
     <aside className="w-80 bg-[#F9FAFB] rounded-lg shadow p-4 sticky top-6 mt-25">
       <h2 className="text-black text-[30px] font-bold">Carrinho</h2>
 
-      <div className="flex flex-col gap-2 mt-5 mb-5 text-black text-[20px]">
+      <div className="flex flex-col gap-2 mt-5 mb-5 text-black text-[20px] ">
         {carrinho.length ? (
           carrinho.map((item, i) => (
-            <div key={i} className="flex justify-between">
-              <p>{item.nome} x{item.qtd}</p>
-              <p>R${(item.valor * item.qtd).toFixed(2)}</p>
-              <button
+            <div key={i} className="flex  h-18 w-72 bg-[#e7e9eb] text-center items-center rounded-md justify-betweens">
+              <div className="flex items-center gap-4"> 
+                <img
+                  src={`./assets/food/${item.nome}.png`}
+                  alt={item.nome}
+                  className="w-13 h-13 object-contain mx-3"
+                />
+              </div>
+              
+              <div className="mx-6">
+                <div>
+                  <p className="font-bold text-[#4EB352] text-[23px]">{item.nome}</p>
+                </div>
+
+                <div className="mt-1">
+                  <p className="font-bold text-[16px] text-right">R${(item.valor * item.qtd).toFixed(2)}</p>
+                </div>
+              </div>
+
+              <div className="flex justify-center text-center items-center ml-auto gap-2 self-end">
+                <button
                 onClick={() => remove(item.nome)}
-                className="w-5 h-5 bg-cover bg-[url('./assets/icons/close.png')] rounded-full cursor-pointer "
+                className="w-5 h-7 bg-cover bg-[#4EB352] rounded-t-lg cursor-pointer text-white text-[18px]"
                 aria-label={`Remover ${item.nome}`}>
-              </button>
+                  -
+                </button>
+
+                <p className="text-[17px] text-black w-6 text-center">{item.qtd}</p>
+                
+                <button
+                onClick={() => adicionar(item.nome)}
+                className="w-5 h-7 bg-cover bg-[#4EB352] rounded-t-lg cursor-pointer text-white text-[18px]"
+                aria-label={`Adicionar ${item.nome}`}> 
+                  +
+                </button>
+              </div>
+        
             </div>
           ))
         ) : (
@@ -98,9 +146,6 @@ function Carrinho() {
         }}> 
         Finalizar compra
       </button>
-
-      
-
 
       {isImageOpen && (
         <div className="image-modal justify-center items-center flex mt-10">
