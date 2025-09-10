@@ -3,12 +3,23 @@ function AdicionarProdutos({ listaProdutos }) {
   const [nome, setNome] = React.useState("");
   const [valor, setValor] = React.useState("");
   const [quant, setQuant] = React.useState("")
+  const [imageBase64, setImageBase64] = React.useState(null);
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
-    if (file) {
+    
+     if (file) {
       const imageUrl = URL.createObjectURL(file);
       setPreview(imageUrl);
+
+     // converte para a base 64 
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64String = reader.result;
+        setImageBase64(base64String); // salva no state
+        console.log("Imagem em Base64:", base64String);
+      };
+      reader.readAsDataURL(file);
     }
   };
 
@@ -20,22 +31,29 @@ function AdicionarProdutos({ listaProdutos }) {
     // });
 
     try{
+      const conteudo = JSON.stringify({
+          nome: nome,
+          valor: Number(valor),
+          quant: Number(quant),
+          // img:JSON.parse(atob(imageBase64)),
+          // img: Buffer.from(imageBase64, 'base64').toString('utf8')
+          img: imageBase64.split(',')[1]
+          // img: "teste"
+        })
+        console.log("Produto adicionado: pre post", conteudo);
+
        const response = await fetch("http://localhost:3000/product",{
         method: "POST",
         headers:{
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({
-          nome: nome,
-          valor: Number(valor),
-          quant: Number(quant)
-        })
+        body:  conteudo
        })
 
         if (!response.ok) throw new Error("Erro ao adicionar produto");
 
         const data = await response.json();
-        console.log("Produto adicionado:", data);
+        console.log("Produto adicionado: pos post", data);
 
         // Atualiza lista de produtos
         const productsResponse = await fetch("http://localhost:3000/products");
@@ -94,7 +112,12 @@ function AdicionarProdutos({ listaProdutos }) {
         >
           Escolha a imagem
         </label>
-        <input id="file-upload" type="file" className="hidden" onChange={handleFileChange} />
+        <input 
+          id="file-upload" 
+          type="file" 
+          className="hidden" 
+          onChange={handleFileChange} 
+        />
       </div>
 
       <p className="border-b-2 border-gray-300 mt-7"></p>

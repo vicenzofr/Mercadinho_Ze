@@ -47,7 +47,7 @@ function ProdutosDisponiveis({removivel}) {
       {listaProdutos.map((produto) => (
         <window.Produtos
           key={produto.id}
-          imagem={`./assets/food/${produto.nome}.png`}
+          imagem={produto.img ? `data:image/png;base64,${produto.img}` : `./assets/food/${produto.nome}.png`}
           nome={produto.nome}
           valor={produto.preco}
           removivel={removivel}

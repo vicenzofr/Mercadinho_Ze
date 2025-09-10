@@ -17,15 +17,18 @@ async function inicializarBD() {
     driver: sqlite3.Database,
   });
 
- // Cria a tabela produtos se não existir
+//  Cria a tabela produtos se não existir
   await db.run(`
     CREATE TABLE IF NOT EXISTS produtos (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       nome TEXT NOT NULL,
       preco REAL NOT NULL,
-      quantidade INTEGER NOT NULL
+      quantidade INTEGER NOT NULL,
+      img TEXT
     )
   `);
+
+
   
   console.log("Banco e tabela inicializados!");
 }
@@ -46,8 +49,14 @@ inicializarBD()
 //   origin: "*"
 // }))
 
-app.use(express.json())
-app.use(cors());// aqui eu consigo liberar todas as APIs sem precisar baixar o cors nos pcs 
+// app.use(express.json())
+  // app.use(cors());// aqui eu consigo liberar todas as APIs sem precisar baixar o cors nos pcs 
+
+app.use(cors({
+  origin: "*",
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type"]
+}));
 
 app.use(express.json({ limit: '50mb'})); //declara o tipo de objeto 
 
@@ -68,10 +77,33 @@ app.post("/product",async(req, res) => {
   // const quantidade = body.quantidade
   // let status
 
-  const { nome, valor, quant } = req.body;
-  const dbResponse = await db.run(`INSERT INTO produtos(nome, preco, quantidade) VALUES(?, ?, ?)`, [nome, valor, quant])
+
+        try {
+          
+          const { nome, valor, quant, img } = req.body;
+          console.log("teste back",img)
+          const dbResponse = await db.run(`INSERT INTO produtos(nome, preco, quantidade, img) VALUES(?, ?, ?, ?)`, [nome, valor, quant, img]);
+          // Code that might throw an error
+          // console.log(someUndefinedVariable); 
+           return res.json(req.body)
+        } catch (error) {
+          debugger;
+          console.error("Caught error in event handler:", error);
+          // Handle the error, e.g., display a message to the user
+        }
+
+
+
+  // db.transaction(tx => {
+  //     tx.executeSql(
+  //       `INSERT INTO produtos(nome, preco, quantidade, img) VALUES(?, ?, ?, ?)`,
+  //       [nome, valor, quant, img],
+  //       () => console.log('produto inserido'),
+  //       (error) => console.error('Error ao inserir  produto:', error)
+  //     );
+  //   }); 
   
-  return res.json(dbResponse)
+ 
 })
 
 
