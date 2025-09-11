@@ -3,6 +3,8 @@ function App() {
   const [menuOpen, setMenuOpen] = React.useState(false);
   const [painel, setPainel] = React.useState("cart");
   const [removeMode, setRemoveMode] = React.useState(false);
+  const [tablet, setTablet] = React.useState(false);
+  const [productsList, setProductsList] = React.useState(true);
 
   return (
     <main className="flex flex-col min-h-screen items-center justify-center">
@@ -40,22 +42,47 @@ function App() {
             className="w-full flex justify-end px-4 relative">
             <window.Menu
             onUserClick={() => setTela("login")}
-            onCartClick={() => { setPainel("cart"); setMenuOpen(false); setRemoveMode(false)}}
-            onAddClick={() => { setPainel("add"); setMenuOpen(false); setRemoveMode(false) }}
-            onCloseClick={() => { setRemoveMode(v => !v); setMenuOpen(false); }}/>
+            onCartClick={() => { 
+              setPainel("cart"); 
+              setMenuOpen(false); 
+              setRemoveMode(false);  
+              setTablet(false);
+              setProductsList(true);
+            }}
+            onAddClick={() => {
+              setPainel("add");
+              setMenuOpen(false);
+              setRemoveMode(false);
+              setTablet(false);
+              setProductsList(true);
+            }}
+            // onCloseClick={() => { setRemoveMode(v => !v); setMenuOpen(false); }}
+            onCloseClick={() => {
+              setTablet(true);
+              setProductsList(false);
+              setMenuOpen(false);
+            }}
+            />
           </div>
         )}
-      
-      <div className="flex-1 mt-6 grid grid-cols-[3fr_1fr] gap-12 items-start pb-30">
+        {tablet && (
+        <window.Tablet/>
+        )}
+        
+      {productsList && (<div className="flex-1 mt-6 grid grid-cols-[3fr_1fr] gap-12 items-start pb-30">
         <div>
           <window.ProdutosDisponiveis removivel={removeMode} />
         </div>
+      
+         
 
         <div className="flex flex-col gap-10 mb-10">
           {painel === 'cart' ? <window.Carrinho /> : <window.AdicionarProdutos />}
           </div>
         </div>
+      )}
       </>
+      
       )}
 
       <div className="w-full mt-50">

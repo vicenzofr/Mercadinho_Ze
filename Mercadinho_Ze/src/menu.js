@@ -22,7 +22,7 @@ function Menu({ onUserClick, onCartClick, onAddClick, onCloseClick, onLogoutClic
             </button>
             
             <button 
-                className="w-6 h-10 bg-[url('./assets/icons/menu/close.png')] bg-no-repeat bg-center bg-contain cursor-pointer transition-transform duration-300 hover:scale-120" 
+                className="w-7 h-10 bg-[url('./assets/icons/menu/tablet.png')] bg-no-repeat bg-center bg-contain cursor-pointer transition-transform duration-300 hover:scale-120" 
                 onClick={onCloseClick} 
                 >
 

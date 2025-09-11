@@ -81,7 +81,7 @@ app.post("/product",async(req, res) => {
         try {
           
           const { nome, valor, quant, img } = req.body;
-          console.log("teste back",img)
+          // console.log("teste back",img)
           const dbResponse = await db.run(`INSERT INTO produtos(nome, preco, quantidade, img) VALUES(?, ?, ?, ?)`, [nome, valor, quant, img]);
           // Code that might throw an error
           // console.log(someUndefinedVariable); 
