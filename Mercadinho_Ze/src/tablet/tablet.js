@@ -20,6 +20,37 @@ function Tablet() {
     fetchProdutos();
   }, []);
 
+    const handleRemove = async (produto) => {
+        // e.stopPropagation(); 
+    try {
+        const confirmar = window.confirm(`Certeza que deseja remover o produto ${produto.nome}?`);
+        if (!confirmar) return;
+        const response = await fetch(`http://localhost:3000/product/delete/${produto.id}`, {
+            method: "DELETE",
+        });
+
+        if (!response.ok) {
+            console.error("Status:", response.status);
+            throw new Error("Erro ao remover o produto");
+        }
+
+        const removeData = await response.json();
+        console.log("Produto removido:", removeData);
+
+        setListaProdutos((prevProdutos) =>
+        prevProdutos.filter((p) => p.id !== produto.id)
+    );
+
+      // Atualiza lista
+        const productsResponse = await fetch("http://localhost:3000/products");
+        const products = await productsResponse.json();
+        setListaProdutos(products);
+
+    } catch (error) {
+      console.error("Erro ao deletar o produto:", error.message);
+    }
+  }
+
   return (
     <div
       id="tableMenu"
@@ -103,25 +134,31 @@ function Tablet() {
           className="col-span-2 row-span-3 flex justify-center items-center text-center"
         >
           <div className="p-6 rounded-xl">
-            <div className="p-6 rounded-xl shadow-[0_4px_10px]">
+            <div className="p-6 rounded-xl shadow-[0_4px_10px] ">
               <table>
                 <thead>
                   <tr>
-                    <th className="px-5 py-1 border bg-[#3e8840]">ID</th>
-                    <th className="px-5 py-1 border bg-[#3e8840]">Produtos</th>
-                    <th className="px-5 py-1 border bg-[#3e8840]">Quantidade</th>
-                    <th className="px-5 py-1 border bg-[#3e8840]">Preço</th>
+                    <th className="px-5 py-1 border-b">ID </th>
+                    <th className="px-5 py-1 border-b">Produtos</th>
+                    <th className="px-5 py-1 border-b">Quantidade</th>
+                    <th className="px-5 py-1 border-b">Preço</th>
+                    <th className="px-2 py-1 border-b"></th>
                   </tr>
                 </thead>
                 <tbody>
                   {listaProdutos.map((produto) => (
                     <tr key={produto.id}>
-                      <td className="px-2 py-1 border">{produto.id}</td>
-                      <td className="px-2 py-1 border">{produto.nome}</td>
-                      <td className="px-2 py-1 border">{produto.quant}</td>
-                      <td className="px-2 py-1 border">
-                        R$ {produto.preco.toFixed(2)}
-                      </td>
+                    <td className="px-2 py-1 border-b ">{produto.id}</td>
+                    <td className="px-2 py-1 border-b">{produto.nome}</td>
+                    <td className="px-2 py-1 border-b">{produto.quant}</td>
+                    <td className="px-2 py-1 border-b">R$ {produto.preco.toFixed(2)}</td>
+                    <td className="px-2 py-1 border-b">
+                        <button 
+                            type="button" 
+                            className="bg-[url('./assets/icons/close.png')] w-3 h-3 bg-no-repeat bg-center bg-contain cursor-pointer"  
+                            onClick={() => handleRemove(produto)}>
+                        </button>
+                    </td>
                     </tr>
                   ))}
                 </tbody>
