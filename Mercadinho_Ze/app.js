@@ -3,7 +3,7 @@ function App() {
   const [menuOpen, setMenuOpen] = React.useState(false);
   const [painel, setPainel] = React.useState("cart");
   const [removeMode, setRemoveMode] = React.useState(false);
-  const [tablet, setTablet] = React.useState(false);
+  // const [tablet, setTablet] = React.useState(false);
   const [productsList, setProductsList] = React.useState(true);
 
   return (
@@ -65,9 +65,11 @@ function App() {
             />
           </div>
         )}
-        {tablet && (
+        {/* {tablet && (
         <window.Tablet/>
-        )}
+        )} */}
+
+         <window.Tablet/>
         
       {productsList && (<div className="flex-1 mt-6 grid grid-cols-[3fr_1fr] gap-12 items-start pb-30">
         <div>
