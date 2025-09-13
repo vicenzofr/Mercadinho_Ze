@@ -28,8 +28,6 @@ async function inicializarBD() {
     )
   `);
 
-
-  
   console.log("Banco e tabela inicializados!");
 }
 
@@ -50,7 +48,7 @@ inicializarBD()
 // }))
 
 // app.use(express.json())
-  // app.use(cors());// aqui eu consigo liberar todas as APIs sem precisar baixar o cors nos pcs 
+// app.use(cors());// aqui eu consigo liberar todas as APIs sem precisar baixar o cors nos pcs 
 
 app.use(cors({
   origin: "*",

@@ -96,6 +96,7 @@ function Carrinho() {
             <div key={i} className="flex  h-18 w-72 bg-[#e7e9eb] text-center items-center rounded-md justify-betweens">
               <div className="flex items-center gap-4"> 
                 <img
+                
                   src={`./assets/food/${item.nome}.png`}
                   alt={item.nome}
                   className="w-13 h-13 object-contain mx-3"

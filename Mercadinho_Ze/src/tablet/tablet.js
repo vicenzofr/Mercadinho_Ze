@@ -115,23 +115,28 @@ function Tablet() {
         </div>
       </div>
 
-      {startListTable && (
-        <div className="flex flex-col h-140 ml-50 justify-between" id="start">
-          <div className="flex-1 flex items-center justify-center gap-40">
-            <div className="w-60 h-22 bg-orange-200"></div>
-            <div className="w-60 h-22 bg-orange-200"></div>
-          </div>
+     {startListTable && (
+        <div className="col-span-2 row-span-3 flex items-center  text-center" id="start">
+          <div className="flex flex-col items-center gap-10">
+            {/* Dois quadrados laranja em cima */}
+            <div className="flex gap-10 mb-30">
+              <div className="w-50 h-22 bg-orange-200"></div>
+              <div className="w-50 h-22 bg-orange-200"></div>
+            </div>
 
-          <div className="h-40 flex items-center justify-center">
-            <div className="w-160 h-100 bg-blue-400"></div>
+            {/* Quadrado azul embaixo */}
+            <div className="h-40 flex items-center justify-center">
+              <div className="w-150 h-90 bg-blue-400"></div>
+            </div>
           </div>
         </div>
       )}
 
+
       {productsListTable && (
         <div
           id="productsTableList"
-          className="col-span-2 row-span-3 flex justify-center items-center text-center"
+          className="col-span-2 row-span-3 flex items-center text-center"
         >
           <div className="p-6 rounded-xl">
             <div className="p-6 rounded-xl shadow-[0_4px_10px] ">
@@ -170,12 +175,44 @@ function Tablet() {
 
       
       {userListTable && (
-        <div
-          id="userTableList"
-          className="col-span-2 row-span-3 flex justify-center items-center"
+
+         <div
+          id="productsTableList"
+          className="col-span-2 row-span-3 flex items-center text-center"
         >
-          <div className="w-[900px] h-[300px] bg-black text-white flex items-center justify-center mx-70 rounded-xl shadow-[0_4px_10px_rgba(107,114,128,0.6)]">
-            <p className="text-2xl font-bold">Tabela de Usuários</p>
+          <div className="p-6 rounded-xl">
+            <div className="p-6 rounded-xl shadow-[0_4px_10px] ">
+              <table>
+                <thead>
+                  <tr>
+                    <th className="px-5 py-1 border-b">ID </th>
+                    <th className="px-10 py-1 border-b">Usuario</th>
+                    <th className="px-5 py-1 border-b">Tipo</th>
+                    {/* <th className="px-5 py-1 border-b">Preço</th> */}
+                    <th className="px-2 py-1 border-b"></th>
+                  </tr>
+                </thead>
+                <tbody>
+
+                  {/* quando tiver o banco de dados do usuario vai ser chamado aqui  */}
+                  {listaProdutos.map((produto) => (
+                    <tr key={produto.id}>
+                    <td className="px-15 py-1 border-b ">{produto.id}</td>
+                    <td className="px-15 py-1 border-b">Vicenzofr@gmail.com</td>
+                    <td className="px-10 py-1 border-b">ADMIN</td>
+                    {/* <td className="px-2 py-1 border-b">R$ {produto.preco.toFixed(2)}</td> */}
+                    <td className="px-2 py-1 border-b">
+                        <button 
+                            type="button" 
+                            className="bg-[url('./assets/icons/close.png')] w-3 h-3 bg-no-repeat bg-center bg-contain cursor-pointer"  
+                            onClick={() => handleRemove(produto)}>
+                        </button>
+                    </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       )}
