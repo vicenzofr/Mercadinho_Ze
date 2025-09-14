@@ -1,29 +1,26 @@
-// import 'primeicons/primeicons.css';
-// import { CiHome } from "react-icons/ci";
-
-
-function Tablet() {
+function Tablet({ onAddClick }) {
   const [productsListTable, setProductsListTable] = React.useState(false);
   const [userListTable, setUserListTable] = React.useState(false);
   const [saleListTable, setSalesListTable] = React.useState(false);
+  const [AddProducts, setAddProducts] = React.useState(false);
   const [startListTable, setStartListTable] = React.useState(true);
   const [listaProdutos, setListaProdutos] = React.useState([]);
 
-  React.useEffect(() => {
-    const fetchProdutos = async () => {
-      try {
-        const response = await fetch("http://localhost:3000/products");
-        const produtos = await response.json();
-        setListaProdutos(produtos);
-        console.log("Produtos no banco:", produtos);
-      } catch (error) {
-        console.error("Erro ao buscar produtos:", error.message);
-      }
-    };
-
-    fetchProdutos();
+  const refreshProdutos = React.useCallback(async () => {
+    try {
+      const resp = await fetch("http://localhost:3000/products");
+      const produtos = await resp.json();
+      setListaProdutos(produtos);
+      console.log("Produtos no banco:", produtos);
+    } catch (err) {
+      console.error("Erro ao buscar produtos:", err.message);
+    }
   }, []);
 
+
+  React.useEffect(() => {
+    refreshProdutos();
+  }, [refreshProdutos]);
     const handleRemove = async (produto) => {
         // e.stopPropagation(); 
     try {
@@ -49,6 +46,7 @@ function Tablet() {
         const productsResponse = await fetch("http://localhost:3000/products");
         const products = await productsResponse.json();
         setListaProdutos(products);
+        await refreshProdutos();
 
     } catch (error) {
       console.error("Erro ao deletar o produto:", error.message);
@@ -58,7 +56,7 @@ function Tablet() {
   return (
     <div
       id="tableMenu"
-      className="w-[1200px] h-[720px] bg-[#a6adb442] grid grid-cols-3 grid-rows-3 gap-0 rounded-3xl mt-10 shadow-xl/20 shadow-[0_4px_10px_rgba(107,114,128,0.6)]"
+      className="w-[1200px] h-[720px] bg-[#a6adb442] flex rounded-3xl mt-10 shadow-xl/20 shadow-[0_4px_10px_rgba(107,114,128,0.6)]"
     >
       <div
         id="greenMenu"
@@ -76,6 +74,7 @@ function Tablet() {
                 setStartListTable(true);
                 setUserListTable(false);
                 setSalesListTable(false);
+                setAddProducts(false);
               }}
             >
             <span className="w-6 flex justify-center">
@@ -97,6 +96,8 @@ function Tablet() {
                 setStartListTable(false);
                 setUserListTable(false);
                 setSalesListTable(false);
+                setAddProducts(false);
+
               }}
             >
               {/* wrapper com largura fixa para alinhar */}
@@ -109,14 +110,16 @@ function Tablet() {
             <button
               className="w-full h-10 text-white text-[15px] cursor-pointer rounded-md hover:bg-white hover:text-black flex items-center justify-start px-4"
               onClick={() => {
-                setProductsListTable(true);
+                setProductsListTable(false);
                 setStartListTable(false);
                 setUserListTable(false);
                 setSalesListTable(false);
+                setAddProducts(true);           // ← abre formulário
+                if (onAddClick) onAddClick();   // opcional para o pai
               }}
             >
               <span className="w-6 flex justify-center">
-                <i className="pi pi-box text-1xl"></i>
+                <i className="pi pi-plus text-1xl"></i>
               </span>
               <span className="ml-2">Adicionar</span>
             </button>
@@ -147,150 +150,175 @@ function Tablet() {
         </div>
       </div>
 
-     {startListTable && (
-      <div className="col-span-2 row-span-3 flex flex-col items-center text-center justify-center " id="start">
-        <div className="flex gap-10 mb-10 justify-center">
-          {/* TOTAL DE PRODUTOS */}
-          <div className="w-64 bg-white rounded-lg shadow-md border border-gray-200 p-4 flex flex-col gap-3">
-            <div className="flex items-center gap-2">
-              <div className="h-10 w-10 bg-gray-100 flex items-center justify-center rounded-md">
-                <i className="pi pi-box text-[#4EB352] text-xl"></i>
+      {startListTable && (
+        <div
+          id="start"
+          className="flex flex-col items-center justify-center flex-1 text-center"
+        >
+          {/* CARDS */}
+          <div className="flex gap-10 mb-10">
+            {/* TOTAL DE PRODUTOS */}
+            <div className="w-64 bg-white rounded-lg shadow-md border border-gray-200 p-4 flex flex-col gap-3">
+              <div className="flex items-center gap-2">
+                <div className="h-10 w-10 bg-gray-100 flex items-center justify-center rounded-md">
+                  <i className="pi pi-box text-[#4EB352] text-xl"></i>
+                </div>
+                <span className="text-gray-600 font-medium">Total Produtos</span>
               </div>
-              <span className="text-gray-600 font-medium">Total Produtos</span>
+              <div className="bg-gray-100 rounded-md px-4 py-3">
+                <h1 className="text-3xl font-bold text-gray-900">25,154</h1>
+              </div>
             </div>
-            <div className="bg-gray-100 rounded-md px-4 py-3">
-              <h1 className="text-3xl font-bold text-gray-900">25,154</h1>
+
+            {/* TOTAL NO CAIXA */}
+            <div className="w-64 bg-white rounded-lg shadow-md border border-gray-200 p-4 flex flex-col gap-3">
+              <div className="flex items-center gap-2">
+                <div className="h-10 w-10 bg-gray-100 flex items-center justify-center rounded-md">
+                  <i className="pi pi-dollar text-[#4EB352] text-xl"></i>
+                </div>
+                <span className="text-gray-600 font-medium">Total Caixa</span>
+              </div>
+              <div className="bg-gray-100 rounded-md px-4 py-3">
+                <h1 className="text-3xl font-bold text-gray-900">R$10,154</h1>
+              </div>
+            </div>
+
+            {/* TOTAL DE USUÁRIOS */}
+            <div className="w-64 bg-white rounded-lg shadow-md border border-gray-200 p-4 flex flex-col gap-3">
+              <div className="flex items-center gap-2">
+                <div className="h-10 w-10 bg-gray-100 flex items-center justify-center rounded-md">
+                  <i className="pi pi-users text-[#4EB352] text-xl"></i>
+                </div>
+                <span className="text-gray-600 font-medium">Total Usuários</span>
+              </div>
+              <div className="bg-gray-100 rounded-md px-4 py-3">
+                <h1 className="text-3xl font-bold text-gray-900">3</h1>
+              </div>
             </div>
           </div>
 
-          {/* TOTAL NO CAIXA */}
-          <div className="w-64 bg-white rounded-lg shadow-md border border-gray-200 p-4 flex flex-col gap-3">
-            <div className="flex items-center gap-2">
-              <div className="h-10 w-10 bg-gray-100 flex items-center justify-center rounded-md">
-                <i className="pi pi-dollar text-[#4EB352] text-xl"></i>
-              </div>
-              <span className="text-gray-600 font-medium">Total Caixa</span>
-            </div>
-            <div className="bg-gray-100 rounded-md px-4 py-3">
-              <h1 className="text-3xl font-bold text-gray-900">R$10,154</h1>
-            </div>
-          </div>
-
-          {/* TOTAL DE USUÁRIOS */}
-          <div className="w-64 bg-white rounded-lg shadow-md border border-gray-200 p-4 flex flex-col gap-3">
-            <div className="flex items-center gap-2">
-              <div className="h-10 w-10 bg-gray-100 flex items-center justify-center rounded-md">
-                <i className="pi pi-users text-[#4EB352] text-xl"></i>
-              </div>
-              <span className="text-gray-600 font-medium">Total Usuários</span>
-            </div>
-            <div className="bg-gray-100 rounded-md px-4 py-3">
-              <h1 className="text-3xl font-bold text-gray-900">3</h1>
-            </div>
+          {/* GRÁFICO */}
+          <div className="flex items-center justify-center">
+            <div className="w-[500px] h-[300px] bg-blue-400 rounded-lg"></div>
           </div>
         </div>
-
-        {/* GRÁFICO */}
-        <div className="flex items-center justify-center mt-10">
-          <div className="w-150 h-90 bg-blue-400"></div>
-        </div>
-      </div>
-    )}
-
-
+      )}
 
       {productsListTable && (
         <div
           id="productsTableList"
-          className="col-span-2 row-span-3 flex items-center text-center"
+          className="flex-1 flex items-center justify-center text-center"
         >
           <div className="p-6 rounded-xl">
-            <div className="p-6 rounded-xl border-1 border-gray-300 bg-white">
-              <table>
-                <thead>
-                  <tr className="bg-gray-300 text-[14px]">
-                    <th className="px-10 py-1">ID </th>
-                    <th className="px-10 py-1">Produtos</th>
-                    <th className="px-10 py-1">Quantidade</th>
-                    <th className="px-10 py-1">Preço</th>
-                    <th className="px-2 py-1"></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {listaProdutos.map((produto) => (
-                    <tr key={produto.id}>
-                    <td className="px-10 py-1 border-b border-gray-300">{produto.id}</td>
-                    <td className="px-10 py-1 border-b  border-gray-300">{produto.nome}</td>
-                    <td className="px-10 py-1 border-b  border-gray-300">{produto.quant}</td>
-                    <td className="px-10 py-1 border-b  border-gray-300">R$ {produto.preco.toFixed(2)}</td>
-                    <td className="px-4 py-1 border-b  border-gray-300">
-                        <button 
-                            type="button" 
-                            className="bg-[url('./assets/icons/delete.png')] w-4 h-4 bg-no-repeat bg-center bg-contain cursor-pointer"  
-                            onClick={() => handleRemove(produto)}>
-                        </button>
-                    </td>
+            <div className="p-6 rounded-xl border border-gray-300 bg-white shadow-md">
+              <div className="max-h-100 overflow-y-auto">
+                <table className="w-full border-collapse">
+                  <thead>
+                    <tr className="bg-gray-300 text-[14px]">
+                      <th className="px-10 py-1">ID</th>
+                      <th className="px-10 py-1">Produtos</th>
+                      <th className="px-10 py-1">Quantidade</th>
+                      <th className="px-10 py-1">Preço</th>
+                      <th className="px-2 py-1"></th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {listaProdutos.map((produto) => (
+                      <tr key={produto.id}>
+                        <td className="px-10 py-1 border-b border-gray-300">
+                          {produto.id}
+                        </td>
+                        <td className="px-10 py-1 border-b border-gray-300 flex items-center gap-2">
+                          <img 
+                            src={produto.img ? `data:image/png;base64,${produto.img}` : `./assets/food/${produto.nome}.png`} 
+                            // alt={produto.nome} 
+                            className="w-7 h-7 rounded-md object-cover" 
+                          />
+                          {produto.nome}
+                        </td>
+                        <td className="px-10 py-1 border-b border-gray-300">
+                          {produto.quant}
+                        </td>
+                        <td className="px-10 py-1 border-b border-gray-300">
+                          R$ {produto.preco.toFixed(2)}
+                        </td>
+                        <td className="px-4 py-1 border-b border-gray-300">
+                          <button
+                            type="button"
+                            className="bg-[url('./assets/icons/delete.png')] w-4 h-4 bg-no-repeat bg-center bg-contain cursor-pointer"
+                            onClick={() => handleRemove(produto)}
+                          ></button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
       )}
 
-      
-      {userListTable && (
+      {AddProducts && (
+        <div className="flex-1 flex items-center justify-center p-6 ">
+          <div className="w-full max-w-[520px]">
+            <window.AdicionarProdutos
+              onAdded={() => {
+                refreshProdutos();
+                setAddProducts(false);
+                setProductsListTable(true);
+              }}
+            />
+          </div>
+        </div>
+      )}
 
+      {userListTable && (
          <div
           id="productsTableList"
-          className="col-span-2 row-span-3 flex items-center text-center"
+          className="flex-1 flex items-center justify-center text-center"
         >
           <div className="p-6 rounded-xl">
-            <div className="p-6 rounded-xl shadow-[0_4px_10px] ">
-              <table>
-                <thead>
-                  <tr>
-                    <th className="px-5 py-1 border-b">ID </th>
-                    <th className="px-10 py-1 border-b">Usuario</th>
-                    <th className="px-5 py-1 border-b">Tipo</th>
-                    {/* <th className="px-5 py-1 border-b">Preço</th> */}
-                    <th className="px-2 py-1 border-b"></th>
-                  </tr>
-                </thead>
-                <tbody>
-
-                  {/* quando tiver o banco de dados do usuario vai ser chamado aqui  */}
-                  {listaProdutos.map((produto) => (
-                    <tr key={produto.id}>
-                    <td className="px-15 py-1 border-b ">{produto.id}</td>
-                    <td className="px-15 py-1 border-b">Vicenzofr@gmail.com</td>
-                    <td className="px-10 py-1 border-b">ADMIN</td>
-                    {/* <td className="px-2 py-1 border-b">R$ {produto.preco.toFixed(2)}</td> */}
-                    <td className="px-2 py-1 border-b">
-                        <button 
-                            type="button" 
-                            className="bg-[url('./assets/icons/close.png')] w-3 h-3 bg-no-repeat bg-center bg-contain cursor-pointer"  
-                            onClick={() => handleRemove(produto)}>
-                        </button>
-                    </td>
+            <div className="p-6 rounded-xl border border-gray-300 bg-white shadow-md">
+              <div className="max-h-100 overflow-y-auto">
+                <table className="w-full border-collapse">
+                  <thead>
+                    <tr className="bg-gray-300 text-[14px]">
+                      <th className="px-10 py-1">ID</th>
+                      <th className="px-10 py-1">Login</th>
+                      <th className="px-10 py-1">Tipo</th>
+                      <th className="px-2 py-1"></th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {listaProdutos.map((produto) => (
+                      <tr key={produto.id}>
+                        <td className="px-10 py-1 border-b border-gray-300">
+                          {produto.id}
+                        </td>
+                        <td className="px-10 py-1 border-b border-gray-300 flex items-center gap-2">
+                          Vicenzofr@gmail.com
+                        </td>
+                        <td className="px-10 py-1 border-b border-gray-300">
+                          ADMIN
+                        </td>
+                        <td className="px-4 py-1 border-b border-gray-300">
+                          <button
+                            type="button"
+                            className="bg-[url('./assets/icons/delete.png')] w-4 h-4 bg-no-repeat bg-center bg-contain cursor-pointer"
+                            onClick={() => handleRemove(produto)}
+                          ></button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
       )}
 
-    
-      {/* {saleListTable && (
-        <div id="salesTableList" className="col-span-2 row-span-3 flex justify-center items-center">
-          <div className="w-[900px] h-[300px] bg-pink-700 flex items-center justify-center rounded-xl shadow-[0_4px_10px_rgba(107,114,128,0.6)]">
-            <p className="text-2xl font-bold text-white">Tabela de Vendas</p>
-          </div>
-        </div>
-      )} */}
     </div>
   );
 }

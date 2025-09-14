@@ -59,6 +59,9 @@ function AdicionarProdutos({ listaProdutos }) {
         const productsResponse = await fetch("http://localhost:3000/products");
         const products = await productsResponse.json();
         console.log("Produtos no banco:", products);
+        setNome(""); setValor(""); setQuant("");
+        setPreview(null); setImageBase64(null);
+        if (onAdded) onAdded();
     }
 
     catch (error) {
@@ -67,8 +70,8 @@ function AdicionarProdutos({ listaProdutos }) {
   };
 
   return (
-    <div className="w-80 h-150 bg-[#F9FAFB] rounded-lg shadow p-4 sticky top-6 mt-25">
-      <h2 className="text-black text-[30px] font-bold">Adicionar Produto</h2>
+    <div className="w-80 h-150 bg-[#F9FAFB] rounded-lg shadow p-4 mx-auto "> 
+      {/* <h2 className="text-black text-[30px] font-bold">Adicionar Produto</h2> */}
 
       {preview ? (
         <img src={preview} alt="Preview" className="w-40 h-40 object-cover rounded-md mx-auto mt-4" />

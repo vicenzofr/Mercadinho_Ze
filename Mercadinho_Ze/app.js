@@ -3,8 +3,10 @@ function App() {
   const [menuOpen, setMenuOpen] = React.useState(false);
   const [painel, setPainel] = React.useState("cart");
   const [removeMode, setRemoveMode] = React.useState(false);
-  // const [tablet, setTablet] = React.useState(false);
+  const [tablet, setTablet] = React.useState(false);
+  // const [AddProducts, setAddProducts] = React.useState(true);
   const [productsList, setProductsList] = React.useState(true);
+  
 
   return (
     <main className="flex flex-col min-h-screen items-center justify-center">
@@ -53,7 +55,7 @@ function App() {
               setPainel("add");
               setMenuOpen(false);
               setRemoveMode(false);
-              setTablet(false);
+              // setTablet(false);
               setProductsList(true);
             }}
             // onCloseClick={() => { setRemoveMode(v => !v); setMenuOpen(false); }}
@@ -70,7 +72,8 @@ function App() {
         )} */}
 
          <window.Tablet/>
-        
+        {/* <window.Tablet onAddClick={() => setPainel({setAddProducts})} /> */}
+          
       {productsList && (<div className="flex-1 mt-6 grid grid-cols-[3fr_1fr] gap-12 items-start pb-30">
         <div>
           <window.ProdutosDisponiveis removivel={removeMode} />
@@ -79,7 +82,8 @@ function App() {
          
 
         <div className="flex flex-col gap-10 mb-10">
-          {painel === 'cart' ? <window.Carrinho /> : <window.AdicionarProdutos />}
+          {/* {painel === 'cart' ? <window.Carrinho /> : <window.AdicionarProdutos />} */}
+          <window.Carrinho />
           </div>
         </div>
       )}

@@ -2,44 +2,51 @@ const { useEffect, useState } = React;
 
 function Carrinho() {
   const [isImageOpen, setImageOpen] = useState(false);
-  const [carrinho, setCarrinho] = useState([]); 
+  const [carrinho, setCarrinho] = useState([]);
   const [valorTotal, setValorTotal] = useState(0);
   const [isCardCredit, setCard] = useState(false);
 
-  const toggleImage = () => {
-    setImageOpen(true);
-    setCard(false); // garante que o outro fique falso
-  };
+  const toggleImage = () => { setImageOpen(true); setCard(false); };
+  const toggleCard  = () => { setCard(true);  setImageOpen(false); };
 
-  const toggleCard = () => {
-    setCard(true);
-    setImageOpen(false); // garante que o outro fique falso
-  };
-
+  // NÃO filtre por valor aqui; deixe a limpeza só estrutural.
   const clear = (dados) =>
-    (dados || []).filter(it => it && typeof it.valor === "number" && typeof it.qtd === "number");
+    (dados || []).filter(it => it && typeof it.qtd === "number" && typeof it.nome === "string");
 
-    useEffect(() => {
-      const loadCarrinho = async () => {
-        const dados = clear(JSON.parse(localStorage.getItem("carrinho") || "[]"));//pegando do local 
+  useEffect(() => {
+    const loadCarrinho = async () => {
+      const locais = clear(JSON.parse(localStorage.getItem("carrinho") || "[]"));
 
-        try {
-          const response = await fetch("http://localhost:3000/products");// pegando do banco de dados
-          const produtosDB = await response.json();
-  
-          //mantem se os produtos realmente existir no banco de dados 
-          const sincronizado = dados.filter(item =>
-            produtosDB.some(prod => prod.nome === item.nome)
-          );
+      try {
+        const resp = await fetch("http://localhost:3000/products");
+        const produtosDB = await resp.json();
 
-          setCarrinho(sincronizado);
-          setValorTotal(sincronizado.reduce((acc, item) => acc + item.valor * item.qtd, 0));
+        // Enriquecer com preço e imagem vindos do banco
+        const sincronizado = locais
+          .map(it => {
+            const p = produtosDB.find(prod => prod.nome === it.nome);
+            if (!p) return null;
+            return {
+              nome: it.nome,
+              qtd: it.qtd,
+              valor: typeof p.preco === "number" ? p.preco : (it.valor || 0),
+              img: p.img || null, // base64 pura (sem prefixo)
+            };
+          })
+          .filter(Boolean);
 
-          localStorage.setItem("carrinho", JSON.stringify(sincronizado));
-        } catch (err) {
-          console.error("Erro ao carregar produtos:", err);
-          setCarrinho(dados);
-          setValorTotal(dados.reduce((acc, item) => acc + item.valor * item.qtd, 0));
+        setCarrinho(sincronizado);
+        setValorTotal(sincronizado.reduce((acc, i) => acc + i.valor * i.qtd, 0));
+
+        // Regrava LEVE no localStorage (sem base64!)
+        localStorage.setItem(
+          "carrinho",
+          JSON.stringify(sincronizado.map(({ nome, qtd, valor }) => ({ nome, qtd, valor })))
+        );
+      } catch (err) {
+        console.error("Erro ao carregar produtos:", err);
+        setCarrinho(locais);
+        setValorTotal(locais.reduce((acc, i) => acc + (i.valor || 0) * i.qtd, 0));
       }
     };
 
@@ -50,41 +57,44 @@ function Carrinho() {
 
   const remove = (nome) => {
     const atual = clear(JSON.parse(localStorage.getItem("carrinho") || "[]"));
-    const removeOne = atual.findIndex(item => item.nome === nome);
-    
-    if (removeOne !== -1) {
-      if (atual[removeOne].qtd > 1) {
-        atual[removeOne].qtd -= 1;
-      } else {
-        atual.splice(removeOne, 1); 
-      }
+    const i = atual.findIndex(item => item.nome === nome);
+    if (i !== -1) {
+      if (atual[i].qtd > 1) atual[i].qtd -= 1;
+      else atual.splice(i, 1);
     }
-
     localStorage.setItem("carrinho", JSON.stringify(atual));
-
-    setCarrinho(atual);
-    setValorTotal(atual.reduce((acc, it) => acc + it.valor * it.qtd, 0));
-
+    setCarrinho(prev => {
+      const novo = prev.map(p => p.nome === nome ? { ...p, qtd: Math.max(0, p.qtd - 1) } : p)
+                      .filter(p => p.qtd > 0);
+      setValorTotal(novo.reduce((acc, it) => acc + it.valor * it.qtd, 0));
+      return novo;
+    });
     window.dispatchEvent(new Event("carrinho:updated"));
   };
 
-  const adicionar = (nome) =>{
-    const atual = clear(JSON.parse(localStorage.getItem("carrinho") || "[]"));
-    const addOne = atual.findIndex(item => item.nome === nome);
-
-    if (addOne >= 0 ) {
-      atual[addOne].qtd += 1
-      } else {
-        atual.push({ nome, qtd: 1, valor: addValor(nome) });       
-      }    
-
+  const adicionar = (nome) => {
+    // Do ponto de vista do carrinho, apenas incrementa quem já existe:
+    const atual = clear(JSON.parse(localStorage.getItem("carrinho") || "[]" ));
+    const i = atual.findIndex(item => item.nome === nome);
+    if (i >= 0) atual[i].qtd += 1;
+    // Se não existir, normalmente isso é feito ao adicionar pelo catálogo.
     localStorage.setItem("carrinho", JSON.stringify(atual));
 
-    setCarrinho(atual);
-    setValorTotal(atual.reduce((acc, it) => acc + it.valor * it.qtd, 0));
+    setCarrinho(prev => {
+      const idx = prev.findIndex(p => p.nome === nome);
+      let novo;
+      if (idx >= 0) {
+        novo = prev.map(p => p.nome === nome ? { ...p, qtd: p.qtd + 1 } : p);
+      } else {
+        // fallback seguro se vier um nome novo por aqui
+        novo = [...prev, { nome, qtd: 1, valor: 0, img: null }];
+      }
+      setValorTotal(novo.reduce((acc, it) => acc + it.valor * it.qtd, 0));
+      return novo;
+    });
 
     window.dispatchEvent(new Event("carrinho:updated"));
-  }
+  };
 
   return (
     <aside className="w-80 bg-[#F9FAFB] rounded-lg shadow p-4 sticky top-6 mt-25">
@@ -93,44 +103,38 @@ function Carrinho() {
       <div className="flex flex-col gap-2 mt-5 mb-5 text-black text-[20px] ">
         {carrinho.length ? (
           carrinho.map((item, i) => (
-            <div key={i} className="flex  h-18 w-72 bg-[#e7e9eb] text-center items-center rounded-md justify-betweens">
-              <div className="flex items-center gap-4"> 
+            <div key={i} className="flex h-18 w-72 bg-[#e7e9eb] items-center rounded-md">
+              <div className="flex items-center gap-4">
                 <img
-                
-                  src={`./assets/food/${item.nome}.png`}
+                  src={item.img ? `data:image/png;base64,${item.img}` : `./assets/food/${item.nome}.png`}
                   alt={item.nome}
                   className="w-13 h-13 object-contain mx-3"
+                  onError={(e) => { e.currentTarget.src = "./assets/food/default.png"; }}
                 />
               </div>
-              
-              <div className="mx-6">
-                <div>
-                  <p className="font-bold text-[#4EB352] text-[23px]">{item.nome}</p>
-                </div>
 
-                <div className="mt-1">
-                  <p className="font-bold text-[16px] text-right">R${(item.valor * item.qtd).toFixed(2)}</p>
-                </div>
+              <div className="mx-6 flex-1">
+                <p className="font-bold text-[#4EB352] text-[23px] leading-none">{item.nome}</p>
+                <p className="font-bold text-[16px] text-right mt-1">
+                  R${(item.valor * item.qtd).toFixed(2)}
+                </p>
               </div>
 
-              <div className="flex justify-center text-center items-center ml-auto gap-2 self-end">
+              <div className="flex items-center gap-2 ml-auto pr-3">
                 <button
-                onClick={() => remove(item.nome)}
-                className="w-5 h-7 bg-cover bg-[#4EB352] rounded-t-lg cursor-pointer text-white text-[18px]"
-                aria-label={`Remover ${item.nome}`}>
-                  -
-                </button>
+                  onClick={() => remove(item.nome)}
+                  className="w-5 h-7 bg-[#4EB352] rounded-t-lg cursor-pointer text-white text-[18px] leading-none"
+                  aria-label={`Remover ${item.nome}`}
+                >-</button>
 
                 <p className="text-[17px] text-black w-6 text-center">{item.qtd}</p>
-                
+
                 <button
-                onClick={() => adicionar(item.nome)}
-                className="w-5 h-7 bg-cover bg-[#4EB352] rounded-t-lg cursor-pointer text-white text-[18px]"
-                aria-label={`Adicionar ${item.nome}`}> 
-                  +
-                </button>
+                  onClick={() => adicionar(item.nome)}
+                  className="w-5 h-7 bg-[#4EB352] rounded-t-lg cursor-pointer text-white text-[18px] leading-none"
+                  aria-label={`Adicionar ${item.nome}`}
+                >+</button>
               </div>
-        
             </div>
           ))
         ) : (
@@ -148,20 +152,17 @@ function Carrinho() {
       <button
         className="h-15 w-70 bg-[#4EB352] hover:bg-green-700 justify-center items-center rounded-xl mx-1 font-bold text-white text-[20px] mt-5 cursor-pointer"
         onClick={() => {
-          if(carrinho.length == 0){
-            alert("Seu carrinho esta vazio")
-            return
-          }
-          setImageOpen(true)
-          
-        }}> 
+          if (!carrinho.length) { alert("Seu carrinho está vazio"); return; }
+          setImageOpen(true);
+        }}
+      >
         Finalizar compra
       </button>
 
       {isImageOpen && (
-        <div className="image-modal justify-center items-center flex mt-10">
+       <div className="image-modal justify-center items-center flex mt-10">
           <div className="image-modal-content ">
-           <button 
+            <button 
               id="creditCard" 
               className="h-15 w-75 border-1 border-gray-500 rounded-xl mt-3 cursor-pointer flex items-center justify-between px-4 font-bold text-[#4EB352]"
               onClick={toggleCard}>
@@ -208,36 +209,36 @@ function Carrinho() {
         </div>
       )}
 
-       {isCardCredit &&(<div id="formsCard">
+      {isCardCredit &&(<div id="formsCard">
         <p className="border-b-2 border-gray-300 mt-10"></p>
-        <button className="w-6 h-6 mt-4 bg-[url('./assets/icons/arrow.png')] bg-no-repeat bg-center bg-contain cursor-pointer" onClick={toggleImage}>
-        </button>
-        <div className="w-72 h-45 bg-[#4EB352] rounded-3xl mt-3 justify-center items-center flex relative flex-col">
-          <div className="self-start mt-4 ">
-            <p className="absolute top-4 left-43 font-bold text-white text-[20px]">ZÉBANK</p>
-          </div>
+         <button className="w-6 h-6 mt-4 bg-[url('./assets/icons/arrow.png')] bg-no-repeat bg-center bg-contain cursor-pointer" onClick={toggleImage}>
+         </button>
+         <div className="w-72 h-45 bg-[#4EB352] rounded-3xl mt-3 justify-center items-center flex relative flex-col">
+           <div className="self-start mt-4 ">
+             <p className="absolute top-4 left-43 font-bold text-white text-[20px]">ZÉBANK</p>
+           </div>
           
-          <div className="flex gap-40 mt-2">
-            <img src="./assets/icons/creditCard/chip.png" className="w-8 h-8"></img>
-            <img src="./assets/icons/creditCard/nfc.png" className="w-6 h-6"></img>
-          </div>
+             <div className="flex gap-40 mt-2">
+               <img src="./assets/icons/creditCard/chip.png" className="w-8 h-8"></img>
+             <img src="./assets/icons/creditCard/nfc.png" className="w-6 h-6"></img>
+           </div>
 
-          <div className="justify-center items-center text-center flex mt-2">
-            <h1 id="numberCard" className="text-white text-[20px] tracking-wide">123 5678 9012 3456</h1>
-          </div>
+           <div className="justify-center items-center text-center flex mt-2">
+             <h1 id="numberCard" className="text-white text-[20px] tracking-wide">123 5678 9012 3456</h1>
+           </div>
 
-          <div className="flex justify-center items-center gap-15 text-center mt-2">
-            <h1 id="cardholderName" className="text-white text-[12px] tracking-wide">CARDHOLDER NAME</h1>
-            <h1 id="mmYY" className="text-white text-[12px] tracking-wide ">12/24</h1>
-          </div>
+           <div className="flex justify-center items-center gap-15 text-center mt-2">
+             <h1 id="cardholderName" className="text-white text-[12px] tracking-wide">CARDHOLDER NAME</h1>
+             <h1 id="mmYY" className="text-white text-[12px] tracking-wide ">12/24</h1>
+           </div>
 
-        </div>
+         </div>
 
-        <div className="justify-center items-center flex mt-4">
-          <forms>
-           <div className="mt-3 gap-2">
-              <div className="w-72 h-10 relative bg-white border border-gray-300 rounded-lg flex items-center px-2">
-                <input 
+         <div className="justify-center items-center flex mt-4">
+           <forms>
+            <div className="mt-3 gap-2">
+               <div className="w-72 h-10 relative bg-white border border-gray-300 rounded-lg flex items-center px-2">
+                 <input 
                   type="number" 
                   id="numberCard" 
                   className="w-full h-full text-[12px] placeholder-gray-400 border-none outline-none pr-8 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
