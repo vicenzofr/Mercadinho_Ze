@@ -1,6 +1,6 @@
 function Menu({ onUserClick, onCartClick, onAddClick, onCloseClick, onLogoutClick }){
     return(
-        <div className="w-17 h-110 bg-[#F9FAFB] absolute right-0 grid gap-2 justify-center items-center animate__animated animate__slideInRight">
+        <div className="w-17 h-80 bg-[#F9FAFB] absolute right-0 grid justify-center items-center animate__animated animate__slideInRight">
             <button 
                 className="w-7 h-10 bg-[url('./assets/icons/menu/user.png')] bg-no-repeat bg-center bg-contain cursor-pointer transition-transform duration-300 hover:scale-120" 
                 onClick={onUserClick}

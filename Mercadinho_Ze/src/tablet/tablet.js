@@ -138,6 +138,7 @@ function Tablet({ onAddClick }) {
                 setStartListTable(false);
                 setUserListTable(true);
                 setSalesListTable(false);
+                setAddProducts(false);   
               }}
             >
                <span className="w-6 flex justify-center">

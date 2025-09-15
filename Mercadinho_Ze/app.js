@@ -55,10 +55,9 @@ function App() {
               setPainel("add");
               setMenuOpen(false);
               setRemoveMode(false);
-              // setTablet(false);
-              setProductsList(true);
+              setTablet(true);
+              setProductsList(false);
             }}
-            // onCloseClick={() => { setRemoveMode(v => !v); setMenuOpen(false); }}
             onCloseClick={() => {
               setTablet(true);
               setProductsList(false);
@@ -67,12 +66,11 @@ function App() {
             />
           </div>
         )}
-        {/* {tablet && (
+        {tablet && (
         <window.Tablet/>
-        )} */}
+        )}
 
-         <window.Tablet/>
-        {/* <window.Tablet onAddClick={() => setPainel({setAddProducts})} /> */}
+         {/* <window.Tablet/> */}
           
       {productsList && (<div className="flex-1 mt-6 grid grid-cols-[3fr_1fr] gap-12 items-start pb-30">
         <div>

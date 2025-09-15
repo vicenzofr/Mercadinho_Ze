@@ -75,22 +75,19 @@ app.post("/product",async(req, res) => {
   // const quantidade = body.quantidade
   // let status
 
-
-        try {
-          
-          const { nome, valor, quant, img } = req.body;
-          // console.log("teste back",img)
-          const dbResponse = await db.run(`INSERT INTO produtos(nome, preco, quantidade, img) VALUES(?, ?, ?, ?)`, [nome, valor, quant, img]);
-          // Code that might throw an error
-          // console.log(someUndefinedVariable); 
-           return res.json(req.body)
-        } catch (error) {
-          debugger;
-          console.error("Caught error in event handler:", error);
-          // Handle the error, e.g., display a message to the user
-        }
-
-
+  try {
+    
+    const { nome, valor, quant, img } = req.body;
+    // console.log("teste back",img)
+    const dbResponse = await db.run(`INSERT INTO produtos(nome, preco, quantidade, img) VALUES(?, ?, ?, ?)`, [nome, valor, quant, img]);
+    // Code that might throw an error
+    // console.log(someUndefinedVariable); 
+      return res.json(req.body)
+  } catch (error) {
+    debugger;
+    console.error("Caught error in event handler:", error);
+    // Handle the error, e.g., display a message to the user
+  }
 
   // db.transaction(tx => {
   //     tx.executeSql(
@@ -100,10 +97,7 @@ app.post("/product",async(req, res) => {
   //       (error) => console.error('Error ao inserir  produto:', error)
   //     );
   //   }); 
-  
- 
 })
-
 
 app.get("/products", async(req, res) => {
   const products = await db.all("SELECT * FROM produtos")

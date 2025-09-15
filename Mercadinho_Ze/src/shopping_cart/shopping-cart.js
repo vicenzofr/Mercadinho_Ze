@@ -120,7 +120,7 @@ function Carrinho() {
                 </p>
               </div>
 
-              <div className="flex items-center gap-2 ml-auto pr-3">
+               <div className="flex items-center gap-2 mt-auto ml-auto pr-3">
                 <button
                   onClick={() => remove(item.nome)}
                   className="w-5 h-7 bg-[#4EB352] rounded-t-lg cursor-pointer text-white text-[18px] leading-none"
