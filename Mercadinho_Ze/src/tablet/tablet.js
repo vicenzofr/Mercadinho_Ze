@@ -122,9 +122,48 @@ function Tablet({ onAddClick }) {
     }
     [setListProducts] 
   }
+
+ React.useEffect(() => {
+    if (window.Highcharts) {
+      const container = document.getElementById("grafico-container");
+      if (!container) return; // evita o erro de nao conseguir renderizar quando clica nos outros tablets
+      window.Highcharts.chart("grafico-container", {
+        title: {
+          text: "Vendas Mensais",
+        },
+        xAxis: {
+          categories: 
+            [
+              "Jan", "Fev", "Mar", "Abr", "Mai", "Jun", 
+              "Jul", "Agos", "Set", "Out", "Nov", "Dez"
+            ], // meses no eixo X
+        },
+        yAxis: {
+          title: { text: "Lucros" },
+          tickPositions: [0, 2000, 4000, 6000, 8000, 10000], // posições fixas na parte do lucro
+          labels: {
+            formatter: function () {
+              // exibe em "k" (milhar)
+              return this.value >= 1000 ? (this.value / 1000) + "k" : this.value; // nao temos valor dos lucros pelo fato de nao ter venda
+            },
+          },
+        },
+        series: [
+          {
+            type: "line",
+            data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], //quantidade de linhas na parte de baixo dos meses 
+            data: [
+              1200, 2500, 3200, 4800, 7000, 7200,
+              7100, 7600, 8000, 8200, 8800, 9500
+            ], // valores fictícios
+            color: "#4EB352"
+          },
+        ],
+      });
+    }
+  }, [startListTable]);
+
   
-
-
 
   
   return (
@@ -275,11 +314,11 @@ function Tablet({ onAddClick }) {
             </div>
           </div>
 
-          {/* GRÁFICO */}
           <div className="flex items-center justify-center">
-            <div className="w-[500px] h-[300px] bg-blue-400 rounded-lg"></div>
+            <div id="grafico-container" className="w-[700px] h-[400px]"></div>
           </div>
         </div>
+       
       )}
 
       {productsListTable && (
