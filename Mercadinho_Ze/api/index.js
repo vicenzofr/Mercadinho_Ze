@@ -1,7 +1,8 @@
 const express = require("express");
 const SQLiteLite = require("sqlite");
 const sqlite3 = require("sqlite3").verbose();
-const cors = require("cors") //para fazer a "liberacao" das portas do front http://127.0.0.1:5500 para o back end que é http://localhost:3000
+const cors = require("cors"); //para fazer a "liberacao" das portas do front http://127.0.0.1:5500 para o back end que é http://localhost:3000
+const { PasswordCrypto } = require("./PassowordCrypto.ts");
 const app = express();
 const port = 3000;
 let db 
@@ -25,6 +26,14 @@ async function inicializarBD() {
       preco REAL NOT NULL,
       quantidade INTEGER NOT NULL,
       img TEXT
+    )
+  `);
+
+   await db.run(`
+    CREATE TABLE IF NOT EXISTS users (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      email TEXT NOT NULL,
+      password TEXT NOT NULL
     )
   `);
 
@@ -53,7 +62,7 @@ inicializarBD()
 app.use(cors({
   origin: "*",
   methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ["Content-Type"]
+  allowedHeaders: ["Content-Type"]// aqui eu consigo liberar todas as APIs sem precisar baixar o cors nos pcs 
 }));
 
 app.use(express.json({ limit: '50mb'})); //declara o tipo de objeto 
@@ -62,11 +71,51 @@ app.get("/", (req, res) => {
   res.send("API rodando com SQLite!");
 });
 
-// fetch('/api/gerar-pdf', {
-//   method: 'POST',
-//   headers: { 'Content-Type': 'application/json' },
-//   body: JSON.stringify(carrinho)
-// });
+
+// USUARIOS
+
+app.post("/users", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const hashedPassword = await PasswordCrypto.hashPassword(password);
+    const dbResponse = await db.run(
+      `INSERT INTO users(email, password) VALUES(?, ?)`,
+      [email, hashedPassword]
+    );
+
+    return res.json({ id: dbResponse.lastID, email });
+  } catch (error) {
+    console.error("Caught error in event handler:", error);
+    return res.status(500).json({ error: "Erro ao registrar usuário" });
+  }
+})
+
+app.get("/users", async(req, res) => {
+  const users = await db.all("SELECT * FROM produtos")
+  return res.json(users)
+})
+
+app.get("/users/:id", async(req, res)=>{
+  const userId = await db.get("SELECT * FROM users WHERE id=?", req.params.id)
+  return res.json(userId)
+})
+
+app.delete("/user/delete/:id", async(req, res) =>{
+  const id = req.params.id
+  const userId = await db.get("SELECT * FROM user WHERE id=?", id)
+  
+  if(!userId){
+    console.log("ID invalido")
+    return res.status(404).send("Usuario nao encontrado")
+  }else{
+    await db.run("DELETE FROM users WHERE id=?", id)
+    return res.status(200).send("Usuario deletado com sucesso")
+  }
+})
+
+
+
+// PRODUTOS
 
 app.post("/product",async(req, res) => {
   // const body = req.body

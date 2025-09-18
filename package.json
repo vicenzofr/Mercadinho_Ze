@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "type": "module",
   "dependencies": {
+    "@types/bcryptjs": "^2.4.6",
     "animate.css": "^4.1.1",
     "cors": "^2.8.5",
     "mercadopago": "^2.8.0",

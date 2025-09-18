@@ -11,11 +11,16 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+   
     "animate.css": "^4.1.1",
+    "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
     "express": "^5.1.0",
     "sequelize": "^6.37.7",
     "sqlite": "^5.1.1",
     "sqlite3": "^5.1.7"
+  },
+  "devDependencies": { 
+    "@types/bcryptjs": "^2.4.6"
   }
 }
