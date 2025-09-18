@@ -3,7 +3,7 @@
   Mercadinho do Zé
 </h1>
 
-<img src="layout mercadinho do ze.png" width="800" height="700">
+<img src="LayoutMercadinhoZe.png" width="800" height="700">
 
 Um mini projeto de e-commerce desenvolvido com React + TailwindCSS, simulando um carrinho de compras simples.
 
