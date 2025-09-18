@@ -2,7 +2,7 @@ function CreateAccount({ onClose }) {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
 
-  const addProductList = async (e) => {
+  const addUser = async (e) => {
     if (e) e.preventDefault();
     try {
       const conteudo = JSON.stringify({ email, password });
@@ -65,7 +65,7 @@ function CreateAccount({ onClose }) {
       <div className="justify-center items-center flex mt-14">
         <button
           type="button"
-          onClick={addProductList}
+          onClick={addUser}
           className="w-50 h-10 bg-[#4EB352] rounded-lg cursor-pointer font-bold text-white"
         >
           Submit

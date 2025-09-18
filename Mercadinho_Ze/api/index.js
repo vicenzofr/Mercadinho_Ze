@@ -2,7 +2,8 @@ const express = require("express");
 const SQLiteLite = require("sqlite");
 const sqlite3 = require("sqlite3").verbose();
 const cors = require("cors"); //para fazer a "liberacao" das portas do front http://127.0.0.1:5500 para o back end que é http://localhost:3000
-const { PasswordCrypto } = require("./PassowordCrypto.ts");
+// const { PasswordCrypto } = require("./PassowordCrypto.ts");
+const { PasswordCrypto } = require("./users/PassowordCrypto.ts");
 const app = express();
 const port = 3000;
 let db 
@@ -91,7 +92,7 @@ app.post("/users", async (req, res) => {
 })
 
 app.get("/users", async(req, res) => {
-  const users = await db.all("SELECT * FROM produtos")
+  const users = await db.all("SELECT * FROM users")
   return res.json(users)
 })
 
@@ -102,7 +103,7 @@ app.get("/users/:id", async(req, res)=>{
 
 app.delete("/user/delete/:id", async(req, res) =>{
   const id = req.params.id
-  const userId = await db.get("SELECT * FROM user WHERE id=?", id)
+  const userId = await db.get("SELECT * FROM users WHERE id=?", id)
   
   if(!userId){
     console.log("ID invalido")

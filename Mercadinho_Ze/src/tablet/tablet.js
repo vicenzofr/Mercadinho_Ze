@@ -4,24 +4,93 @@ function Tablet({ onAddClick }) {
   const [saleListTable, setSalesListTable] = React.useState(false);
   const [AddProducts, setAddProducts] = React.useState(false);
   const [startListTable, setStartListTable] = React.useState(true);
-  const [listaProdutos, setListaProdutos] = React.useState([]);
+  const [listProducts, setListProducts] = React.useState([]);
+  const [listUsers, setListUsers] = React.useState([]);
 
-  const refreshProdutos = React.useCallback(async () => {
-    try {
-      const resp = await fetch("http://localhost:3000/products");
-      const produtos = await resp.json();
-      setListaProdutos(produtos);
-      console.log("Produtos no banco:", produtos);
-    } catch (err) {
-      console.error("Erro ao buscar produtos:", err.message);
-    }
+  const refreshAll = React.useCallback(async () => {
+  try {
+    const [respUser, respProdutos] = await Promise.all([
+      fetch("http://localhost:3000/users"),
+      fetch("http://localhost:3000/products"),
+    ]);
+
+    const [users, produtos] = await Promise.all([respUser.json(), respProdutos.json()]);
+
+    setListUsers(users);
+    setListProducts(produtos);
+
+    console.log("Usuarios:", users);
+    console.log("Produtos:", produtos);
+  } catch (err) {
+    console.error("Erro ao buscar dados:", err instanceof Error ? err.message : err);
+  }
   }, []);
-
-
   React.useEffect(() => {
-    refreshProdutos();
-  }, [refreshProdutos]);
-    const handleRemove = async (produto) => {
+      refreshAll();
+  }, [refreshAll]);
+
+
+  // const refreshUsers = React.useCallback(async () => {
+  //   try {
+  //     const respUser = await fetch("http://localhost:3000/users");
+  //     const user = await respUser.json();
+  //     setListUsers(user);
+  //     console.log("Usuarios no banco:", user);
+  //   } catch (err) {
+  //     console.error("Erro ao buscar Usuario:", err.message);
+  //   }
+  // }, []);
+
+  //   const refreshProdutos = React.useCallback(async () => {
+  //   try {
+  //     const resp = await fetch("http://localhost:3000/products");
+  //     const produtos = await resp.json();
+  //     setListaProdutos(produtos);
+  //     console.log("Produtos no banco:", produtos);
+  //   } catch (err) {
+  //     console.error("Erro ao buscar produtos:", err.message);
+  //   }
+  // }, []);
+
+  //   React.useEffect(() => {
+  //   refreshUsers();
+  // }, [refreshUsers]);
+
+    const handleRemoveUser = async (user) => {
+        // e.stopPropagation(); 
+    try {
+        const confirmar = window.confirm(`Certeza que deseja remover o produto ${user.nome}?`);
+        if (!confirmar) return;
+        const response = await fetch(`http://localhost:3000/user/delete/${user.id}`, {
+            method: "DELETE",
+        });
+
+        if (!response.ok) {
+            console.error("Status:", response.status);
+            throw new Error("Erro ao remover o Usuario");
+        }
+
+        const removeData = await response.json();
+        console.log("Usuario removido:", removeData);
+
+        // listUsers((prevUser) =>
+        // prevUser.filter((p) => p.id !== user.id)
+        setListUsers((prevUsers) => prevUsers.filter((u) => u.id !== user.id));
+
+      // Atualiza lista
+        const userResponse = await fetch("http://localhost:3000/users");
+        const Users = await userResponse.json();
+        setListUsers(Users);
+        await refreshProdutos();
+
+    } catch (error) {
+      console.error("Erro ao deletar o Usuario:", error.message);
+    }
+  }
+
+
+
+    const handleRemoveProduct = async (produto) => {
         // e.stopPropagation(); 
     try {
         const confirmar = window.confirm(`Certeza que deseja remover o produto ${produto.nome}?`);
@@ -38,21 +107,26 @@ function Tablet({ onAddClick }) {
         const removeData = await response.json();
         console.log("Produto removido:", removeData);
 
-        setListaProdutos((prevProdutos) =>
+        setListProducts((prevProdutos) =>
         prevProdutos.filter((p) => p.id !== produto.id)
     );
 
       // Atualiza lista
         const productsResponse = await fetch("http://localhost:3000/products");
         const products = await productsResponse.json();
-        setListaProdutos(products);
+        setListProducts(products);
         await refreshProdutos();
 
     } catch (error) {
       console.error("Erro ao deletar o produto:", error.message);
     }
+    [setListProducts] 
   }
+  
 
+
+
+  
   return (
     <div
       id="tableMenu"
@@ -100,7 +174,6 @@ function Tablet({ onAddClick }) {
 
               }}
             >
-              {/* wrapper com largura fixa para alinhar */}
               <span className="w-6 flex justify-center">
                 <i className="pi pi-box text-1xl"></i>
               </span>
@@ -167,7 +240,9 @@ function Tablet({ onAddClick }) {
                 <span className="text-gray-600 font-medium">Total Produtos</span>
               </div>
               <div className="bg-gray-100 rounded-md px-4 py-3">
-                <h1 className="text-3xl font-bold text-gray-900">25,154</h1>
+                <h1 className="text-3xl font-bold text-gray-900">
+                  {listProducts.length.toLocaleString()} {/*isso aqui vai pegar a quantidade de produtos do banco e colocara ai */}
+                </h1>
               </div>
             </div>
 
@@ -193,7 +268,9 @@ function Tablet({ onAddClick }) {
                 <span className="text-gray-600 font-medium">Total Usuários</span>
               </div>
               <div className="bg-gray-100 rounded-md px-4 py-3">
-                <h1 className="text-3xl font-bold text-gray-900">3</h1>
+                <h1 className="text-3xl font-bold text-gray-900">
+                  {listUsers.length.toLocaleString()}
+                </h1>
               </div>
             </div>
           </div>
@@ -224,7 +301,7 @@ function Tablet({ onAddClick }) {
                     </tr>
                   </thead>
                   <tbody>
-                    {listaProdutos.map((produto) => (
+                    {listProducts.map((produto) => (
                       <tr key={produto.id}>
                         <td className="px-10 py-1 border-b border-gray-300">
                           {produto.id}
@@ -232,13 +309,12 @@ function Tablet({ onAddClick }) {
                         <td className="px-10 py-1 border-b border-gray-300 flex items-center gap-2">
                           <img 
                             src={produto.img ? `data:image/png;base64,${produto.img}` : `./assets/food/${produto.nome}.png`} 
-                            // alt={produto.nome} 
                             className="w-7 h-7 rounded-md object-cover" 
                           />
                           {produto.nome}
                         </td>
                         <td className="px-10 py-1 border-b border-gray-300">
-                          {produto.quant}
+                          {produto.quantidade}
                         </td>
                         <td className="px-10 py-1 border-b border-gray-300">
                           R$ {produto.preco.toFixed(2)}
@@ -247,7 +323,7 @@ function Tablet({ onAddClick }) {
                           <button
                             type="button"
                             className="bg-[url('./assets/icons/delete.png')] w-4 h-4 bg-no-repeat bg-center bg-contain cursor-pointer"
-                            onClick={() => handleRemove(produto)}
+                            onClick={() => handleRemoveProduct(produto)}
                           ></button>
                         </td>
                       </tr>
@@ -292,13 +368,13 @@ function Tablet({ onAddClick }) {
                     </tr>
                   </thead>
                   <tbody>
-                    {listaProdutos.map((produto) => (
-                      <tr key={produto.id}>
+                    {listUsers.map((user) => (
+                      <tr key={user.id}>
                         <td className="px-10 py-1 border-b border-gray-300">
-                          {produto.id}
+                          {user.id}
                         </td>
                         <td className="px-10 py-1 border-b border-gray-300 flex items-center gap-2">
-                          Vicenzofr@gmail.com
+                          {user.email}
                         </td>
                         <td className="px-10 py-1 border-b border-gray-300">
                           ADMIN
@@ -307,7 +383,7 @@ function Tablet({ onAddClick }) {
                           <button
                             type="button"
                             className="bg-[url('./assets/icons/delete.png')] w-4 h-4 bg-no-repeat bg-center bg-contain cursor-pointer"
-                            onClick={() => handleRemove(produto)}
+                            onClick={() => handleRemoveUser(user)}
                           ></button>
                         </td>
                       </tr>

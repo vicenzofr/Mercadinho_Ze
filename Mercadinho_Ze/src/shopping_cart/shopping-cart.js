@@ -112,10 +112,9 @@ function Carrinho() {
                   onError={(e) => { e.currentTarget.src = "./assets/food/default.png"; }}
                 />
               </div>
-
-              <div className="mx-6 flex-1">
-                <p className="font-bold text-[#4EB352] text-[23px] leading-none">{item.nome}</p>
-                <p className="font-bold text-[16px] text-right mt-1">
+              <div className="mx-3 flex-1 min-w-0">
+                <p className="font-bold text-[#4EB352] text-[19px] leading-none truncate">{item.nome}</p>
+                <p className="font-bold text-[16px] mt-1 truncate">
                   R${(item.valor * item.qtd).toFixed(2)}
                 </p>
               </div>
