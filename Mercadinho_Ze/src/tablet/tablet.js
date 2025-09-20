@@ -164,8 +164,6 @@ function Tablet({ onAddClick }) {
   }, [startListTable]);
 
   
-
-  
   return (
     <div
       id="tableMenu"

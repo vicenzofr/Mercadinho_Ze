@@ -7,11 +7,8 @@ function Carrinho() {
   const [isCardCredit, setCard] = useState(false);
 
   const toggleImage = () => { setImageOpen(true); setCard(false); };
-  const toggleCard  = () => { setCard(true);  setImageOpen(false); };
-
-  // NÃO filtre por valor aqui; deixe a limpeza só estrutural.
-  const clear = (dados) =>
-    (dados || []).filter(it => it && typeof it.qtd === "number" && typeof it.nome === "string");
+  const toggleCard  = () => { setCard(true);  setImageOpen(false); }; 
+  const clear = (dados) => (dados || []).filter(it => it && typeof it.qtd === "number" && typeof it.nome === "string");
 
   useEffect(() => {
     const loadCarrinho = async () => {
