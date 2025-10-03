@@ -1,4 +1,4 @@
-function Header({ onLoginClick, onMenuClick }) {
+function Header({ onMenuClick }) {
   return (
     <header className="flex items-center p-4 w-full border-b-2 border-gray-300">
       <img src="./assets/icons/logo.png" alt="Logo Mercadinho" className="w-20 h-20 mr-3"/>

@@ -23,7 +23,7 @@ function CreateAccount({ onClose }) {
       setPassword("");
       window.dispatchEvent(new CustomEvent("UsuarioAdicionado", { detail: data }));
     } catch (error) {
-      console.error("Erro:", error.message);
+        console.error("Erro:", error.message);
     }
   };
 

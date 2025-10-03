@@ -1,37 +1,7 @@
 function Forms({ onClose, onCreateAccount, onforgotPassword = () => {} }){
     const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");
-    const { PasswordCrypto } = require("./users/PassowordCrypto.ts");
-
     
-    const getUser = async (e) => {
-    if (e) e.preventDefault();
-    try {
-      const response = await fetch("http://localhost:3000/users/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-
-      if (!response.ok) throw new Error("Erro ao verificar Usuario");
-
-      const data = await response.json();
-      console.log("Usuario Verificado: pos post", data);
-
-      setEmail("");
-      setPassword("");
-      window.dispatchEvent(new CustomEvent("UsuarioVerificado", { detail: data }));
-    } catch (error) {
-      console.error("Erro:", error.message);
-    }
-  };
-
-
-    // const verifyPassword = async () => {
-    //     const { email, password } = req.body;
-    //     return await compare(password, hashedPassword);
-    // };
-
 
     return(
         <div className="w-100 h-120 bg-[#F9FAFB] mt-46 rounded-lg border-1 border-[#898989]">
@@ -80,7 +50,7 @@ function Forms({ onClose, onCreateAccount, onforgotPassword = () => {} }){
                 id="submit">
                     <button 
                         type="submit" 
-                        onClick={verifyPasswordUser}
+                        // onClick={PasswordCrypto}
                         className="w-50 h-10 bg-[#4EB352]  rounded-lg cursor-pointer font-bold text-white">
                             Submit
                     </button>

@@ -1,4 +1,5 @@
 import { genSalt, hash, compare } from "bcryptjs";
+// import {email, password} from ".../src"
 
 const SALT_ROUNDS = 9;
 
@@ -10,6 +11,7 @@ const hashPassword = async (password: string) => {
 const verifyPassword = async (password: string, hashedPassword: string) => {
   return await compare(password, hashedPassword);
 };
+
 
 export const PasswordCrypto = {
   hashPassword,

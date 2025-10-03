@@ -1,10 +1,10 @@
 function App() {
+  
   const [tela, setTela] = React.useState("site");
   const [menuOpen, setMenuOpen] = React.useState(false);
   const [painel, setPainel] = React.useState("cart");
   const [removeMode, setRemoveMode] = React.useState(false);
   const [tablet, setTablet] = React.useState(false);
-  // const [AddProducts, setAddProducts] = React.useState(true);
   const [productsList, setProductsList] = React.useState(true);
   
 
@@ -31,12 +31,13 @@ function App() {
       {tela === "site" && (
     
       <>
-        <div className="w-full">
-          <window.Header
-            onLoginClick={() => setTela("login")}
-            onMenuClick={() => setMenuOpen(v => !v)}
-          />
-        </div>
+      <div className="w-full">
+        <Header
+          onLoginClick={() => setTela("login")}
+          onMenuClick={() => setMenuOpen(v => !v)}
+        />
+      </div>
+
 
         {/* menu aparece só quando menuOpen == true */} 
         {menuOpen && (
@@ -92,6 +93,8 @@ function App() {
       <div className="w-full mt-50">
         <window.Footer />
       </div>
+
+      <window.UsuariosDisponiveis/>
     </main>    
   );
 }
