@@ -94,7 +94,7 @@ function App() {
         <window.Footer />
       </div>
 
-      <window.UsuariosDisponiveis/>
+      {/* <window.UsuariosDisponiveis/> */}
     </main>    
   );
 }
