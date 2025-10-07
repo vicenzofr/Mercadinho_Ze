@@ -4,6 +4,7 @@ const sqlite3 = require("sqlite3").verbose();
 const cors = require("cors"); //para fazer a "liberacao" das portas do front http://127.0.0.1:5500 para o back end que é http://localhost:3000
 // const { PasswordCrypto } = require("./PassowordCrypto.ts");
 const { PasswordCrypto } = require("./users/PassowordCrypto.ts");
+const bcrypt = require("bcryptjs");
 const app = express();
 const port = 3000;
 let db 
@@ -91,6 +92,31 @@ app.post("/users", async (req, res) => {
   }
 })
 
+app.post("/login", async (req, res) => {
+  try {
+    const { email, password } = req.body || {};
+    if (!email || !password) {
+      return res.status(400).json({ message: "E-mail e senha são obrigatórios." });
+    }
+
+    const user = await db.get("SELECT * FROM users WHERE email = ?", [email.trim().toLowerCase()]);
+    if (!user) {
+      return res.status(401).json({ message: "Credenciais inválidas." });
+    }
+
+    const ok = await bcrypt.compare(password, user.password); // user.password deve ser HASH
+    if (!ok) {
+      return res.status(401).json({ message: "Credenciais inválidas." });
+    }
+
+    return res.json({ success: true, user: { id: user.id, email: user.email } });
+  } catch (e) {
+    console.error("Erro /login:", e); // <— logue para ver a mensagem real
+    return res.status(500).json({ message: "Erro no servidor" });
+  }
+});
+
+
 app.get("/users", async(req, res) => {
   const users = await db.all("SELECT * FROM users")
   return res.json(users)
@@ -138,15 +164,6 @@ app.post("/product",async(req, res) => {
     console.error("Caught error in event handler:", error);
     // Handle the error, e.g., display a message to the user
   }
-
-  // db.transaction(tx => {
-  //     tx.executeSql(
-  //       `INSERT INTO produtos(nome, preco, quantidade, img) VALUES(?, ?, ?, ?)`,
-  //       [nome, valor, quant, img],
-  //       () => console.log('produto inserido'),
-  //       (error) => console.error('Error ao inserir  produto:', error)
-  //     );
-  //   }); 
 })
 
 app.get("/products", async(req, res) => {

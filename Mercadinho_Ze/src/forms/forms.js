@@ -49,7 +49,9 @@ function Forms({ onClose, onCreateAccount, onforgotPassword = () => {} }){
                 className="justify-center items-center flex mt-14"
                 id="submit">
                     <button 
-                        type="submit" 
+                        type="submit"
+                        id="verificarConta"
+
                         // onClick={PasswordCrypto}
                         className="w-50 h-10 bg-[#4EB352]  rounded-lg cursor-pointer font-bold text-white">
                             Submit

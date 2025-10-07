@@ -1,83 +1,59 @@
-// // import "./PassowordCrypto.ts"
-// // import { genSalt, hash, compare } from "bcryptjs";
-// // import
+async function verificarUsuario() {
+    try {
+      const emailEl = document.getElementById("email");
+      const passEl = document.getElementById("password");
 
-// function UsuariosDisponiveis() {
-//   const [listaUsuarios, setListaUsuarios] = useState([]);
+      if (!emailEl || !passEl) {
+        throw new Error("Campos de email/senha não encontrados no DOM.");
+      }
 
-//   // função reutilizável que busca a lista do backend
-//   const fetchUsuarios = async () => {
-//     try {
-//       const response = await fetch("http://localhost:3000/users");
-//       const users = await response.json();
-//       setListaUsuarios(users);
-//       console.log("Usuarios no banco:", users); //REMOVER ISSO DEPOIS PELO AMOR DE DEUS 
-//     } catch (error) {
-//       console.error("Erro ao buscar Usuarios:", error.message);
-//     }
-//   };
+      const email = emailEl.value.trim();
+      const password = passEl.value;
 
-//   const verifyPassword = async (password, hashedPassword) => {
-//     return await compare(password, hashedPassword);
-//   };
+      if (!email || !password) {
+        alert("Preencha email e senha.");
+        return { success: false, message: "Campos vazios" };
+      }
 
-//   useEffect(() => {
-//     fetchUsuarios();
-//   }, []);
+      const response = await fetch("http://localhost:3000/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        // Envie a senha pura; o servidor faz o hash/compare.
+        body: JSON.stringify({ email, password }),
+        credentials: "include", // se você usar cookies/sessão
+      });
 
-//   // precisa retornar algo
-//   return (
-//     <div>
-//       <h1>Lista de Usuários</h1>
-//       <ul>
-//         {listaUsuarios.map((user) => (
-//           <li key={user.id}>{user.nome}</li>
-//         ))}
-//       </ul>
-//     </div>
-//   );
-// }
+      // Pode haver responses sem JSON válido (ex.: 204 ou erro HTML)
+      let data = null;
+      try { data = await response.json(); } catch (_) { data = {}; }
 
-// window.UsuariosDisponiveis = UsuariosDisponiveis;
+      if (!response.ok) {
+        const message = data?.message || "Falha ao entrar.";
+        alert(message);
+        return { success: false, message };
+      }
 
+      alert("LOGADO COM SUCESSO!");
+      return { success: true, user: data.user ?? null };
+    } catch (error) {
+      console.error("Erro:", error);
+      alert("Erro inesperado. Veja o console.");
+      return { success: false, message: error?.message || "Erro inesperado" };
+    }
+  }
 
+  document.addEventListener("DOMContentLoaded", () => {
+    const btn = document.getElementById("verificarConta");
+    if (!btn) return;
 
-
-
-// function CreateAccount() {
-//     const [email, setEmail] = React.useState("");
-//     const [password, setPassword] = React.useState("");
-    
-//     const addUser = async (e) => {
-
-//         if (e) e.preventDefault();
-//         try {
-//         const conteudo = JSON.stringify({ email, password });
-//         console.log("Usuario adicionado: pre post", conteudo);
-
-//         const response = await fetch("http://localhost:3000/users", {
-//             method: "GET",
-//             headers: { "Content-Type": "application/json" },
-//             body: conteudo,
-//         });
-
-//         if (!response.ok) throw new Error("Erro ao adicionar Usuario");
-
-//         const data = await response.json();
-//         console.log("Usuario adicionado: pos post", data);
-
-//         setEmail("");
-//         setPassword("");
-//         window.dispatchEvent(new CustomEvent("UsuarioAdicionado", { detail: data }));
-//         } catch (error) {
-//         console.error("Erro:", error.message);
-//         }
-//     };
-
-// }
-
-// const verifyPassword = async (password: string, hashedPassword: string) => {
-//   return await compare(password, hashedPassword);
-// };
-
-// const verifyEmail = async 
+    btn.addEventListener("click", async (e) => {
+      e.preventDefault();
+      btn.disabled = true;
+      try {
+        const result = await verificarUsuario();
+        console.log(result);
+      } finally {
+        btn.disabled = false;
+      }
+    });
+  });
