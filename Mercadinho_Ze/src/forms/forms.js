@@ -5,7 +5,7 @@ function Forms({ onClose, onCreateAccount, onforgotPassword = () => {} }){
 
     return(
         <div className="w-100 h-120 bg-[#F9FAFB] mt-46 rounded-lg border-1 border-[#898989]">
-            <div className=" relative flex justify-center items-center mt-7">
+            <div cl assName=" relative flex justify-center items-center mt-7">
                 <button
                     onClick={onClose}
                     className="absolute left-10 w-6 h-6 bg-cover bg-[url('./assets/icons/arrow.png')] cursor-pointer ">
