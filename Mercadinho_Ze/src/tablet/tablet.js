@@ -29,35 +29,7 @@ function Tablet({ onAddClick }) {
       refreshAll();
   }, [refreshAll]);
 
-
-  // const refreshUsers = React.useCallback(async () => {
-  //   try {
-  //     const respUser = await fetch("http://localhost:3000/users");
-  //     const user = await respUser.json();
-  //     setListUsers(user);
-  //     console.log("Usuarios no banco:", user);
-  //   } catch (err) {
-  //     console.error("Erro ao buscar Usuario:", err.message);
-  //   }
-  // }, []);
-
-  //   const refreshProdutos = React.useCallback(async () => {
-  //   try {
-  //     const resp = await fetch("http://localhost:3000/products");
-  //     const produtos = await resp.json();
-  //     setListaProdutos(produtos);
-  //     console.log("Produtos no banco:", produtos);
-  //   } catch (err) {
-  //     console.error("Erro ao buscar produtos:", err.message);
-  //   }
-  // }, []);
-
-  //   React.useEffect(() => {
-  //   refreshUsers();
-  // }, [refreshUsers]);
-
     const handleRemoveUser = async (user) => {
-        // e.stopPropagation(); 
     try {
         const confirmar = window.confirm(`Certeza que deseja remover o produto ${user.nome}?`);
         if (!confirmar) return;
@@ -72,9 +44,6 @@ function Tablet({ onAddClick }) {
 
         const removeData = await response.json();
         console.log("Usuario removido:", removeData);
-
-        // listUsers((prevUser) =>
-        // prevUser.filter((p) => p.id !== user.id)
         setListUsers((prevUsers) => prevUsers.filter((u) => u.id !== user.id));
 
       // Atualiza lista

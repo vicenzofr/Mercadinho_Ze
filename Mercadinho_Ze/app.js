@@ -71,8 +71,6 @@ function App() {
         <window.Tablet/>
         )}
 
-         {/* <window.Tablet/> */}
-          
       {productsList && (<div className="flex-1 mt-6 grid grid-cols-[3fr_1fr] gap-12 items-start pb-30">
         <div>
           <window.ProdutosDisponiveis removivel={removeMode} />
@@ -81,7 +79,6 @@ function App() {
          
 
         <div className="flex flex-col gap-10 mb-10">
-          {/* {painel === 'cart' ? <window.Carrinho /> : <window.AdicionarProdutos />} */}
           <window.Carrinho />
           </div>
         </div>
@@ -93,8 +90,6 @@ function App() {
       <div className="w-full mt-50">
         <window.Footer />
       </div>
-
-      {/* <window.UsuariosDisponiveis/> */}
     </main>    
   );
 }

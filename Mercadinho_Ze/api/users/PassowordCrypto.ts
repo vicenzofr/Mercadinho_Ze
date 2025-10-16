@@ -1,5 +1,4 @@
 import { genSalt, hash, compare } from "bcryptjs";
-// import {email, password} from ".../src"
 
 const SALT_ROUNDS = 9;
 

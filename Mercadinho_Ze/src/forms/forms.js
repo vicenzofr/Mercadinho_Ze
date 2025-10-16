@@ -1,7 +1,6 @@
 function Forms({ onClose, onCreateAccount, onforgotPassword = () => {} }){
     const [email, setEmail] = React.useState("");
-    const [password, setPassword] = React.useState("");
-    
+    const [password, setPassword] = React.useState("");    
 
     return(
         <div className="w-100 h-120 bg-[#F9FAFB] mt-46 rounded-lg border-1 border-[#898989]">
@@ -51,8 +50,6 @@ function Forms({ onClose, onCreateAccount, onforgotPassword = () => {} }){
                     <button 
                         type="submit"
                         id="verificarConta"
-
-                        // onClick={PasswordCrypto}
                         className="w-50 h-10 bg-[#4EB352]  rounded-lg cursor-pointer font-bold text-white">
                             Submit
                     </button>
